@@ -3,8 +3,6 @@ package com.etherprod.worldshaper.objects;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
-import android.util.Log;
-
 public class Player extends GameObject
 {
  
@@ -19,36 +17,31 @@ public class Player extends GameObject
     // ===========================================================
     // Constructors
     // ===========================================================
- 
-    public Player(final float pX, final float pY, final TiledTextureRegion pTiledTextureRegion, 
-    			  final VertexBufferObjectManager pVertexBufferObjectManager)
-    {
-        super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);
-    }
+	
+	public Player(float centerX, float centerY,
+			TiledTextureRegion mPlayerTextureRegion,
+			VertexBufferObjectManager vertexBufferObjectManager)
+	{
+        super(centerX, centerY, mPlayerTextureRegion, vertexBufferObjectManager);
+	}
  
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
- 
-    @Override
+
+	@Override
     public void move()
     {
-    	for (Tile Platform : Map.getTilesList()) 
+    	/*for (Tile Platform : Map.getTilesList()) 
     	{
     	    if (this.collidesWith(Platform)) 
     	    {
     	        Log.v("objects.Player", "just collided with platform :p");
     	    }
-    	}
+    	}*/
     }
 
-	public void left() 
-	{
-		// TODO Auto-generated method stub
-		
-	}
- 
     // ===========================================================
     // Methods
     // ===========================================================
-}
+ }
