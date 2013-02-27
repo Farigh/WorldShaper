@@ -4,20 +4,17 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl.IAnalogOnScreenControlListener;
-import org.andengine.engine.handler.physics.PhysicsHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
-import org.andengine.util.math.MathUtils;
 
 import android.opengl.GLES20;
 import android.util.DisplayMetrics;
@@ -36,9 +33,6 @@ public abstract class ControlsActivity extends SimpleBaseGameActivity
 
 	private Camera				mCamera;
 
-	private BitmapTextureAtlas	mBitmapTextureAtlas;
-	private ITextureRegion		mFaceTextureRegion;
-
 	private BitmapTextureAtlas	mOnScreenControlTexture;
 	private ITextureRegion		mOnScreenControlBaseTextureRegion;
 	private ITextureRegion		mOnScreenControlKnobTextureRegion;
@@ -50,6 +44,16 @@ public abstract class ControlsActivity extends SimpleBaseGameActivity
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+
+	public int getCAMERA_WIDTH()
+	{
+		return CAMERA_WIDTH;
+	}
+
+	public int getCAMERA_HEIGHT()
+	{
+		return CAMERA_HEIGHT;
+	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -79,14 +83,8 @@ public abstract class ControlsActivity extends SimpleBaseGameActivity
 	}
 
 	@Override
-	public void onCreateResources() {
-		this.mBitmapTextureAtlas = new BitmapTextureAtlas(
-				this.getTextureManager(), 32, 32, TextureOptions.BILINEAR);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mBitmapTextureAtlas, this,
-						"face_box.png", 0, 0);
-		this.mBitmapTextureAtlas.load();
-
+	public void onCreateResources() 
+	{
 		this.mOnScreenControlTexture = new BitmapTextureAtlas(
 				this.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
 		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
@@ -99,44 +97,34 @@ public abstract class ControlsActivity extends SimpleBaseGameActivity
 	}
 
 	@Override
-	public Scene onCreateScene() {
+	public Scene onCreateScene()
+	{
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 
 		final Scene scene = new Scene();
 		scene.setBackground(new Background(0.09804f, 0.6274f, 0.8784f));
 
-		final float centerX = (CAMERA_WIDTH - this.mFaceTextureRegion
-				.getWidth()) / 2;
-		final float centerY = (CAMERA_HEIGHT - this.mFaceTextureRegion
-				.getHeight()) / 2;
-		final Sprite face = new Sprite(centerX, centerY,
-				this.mFaceTextureRegion, this.getVertexBufferObjectManager());
-		final PhysicsHandler physicsHandler = new PhysicsHandler(face);
-		face.registerUpdateHandler(physicsHandler);
-
-		scene.attachChild(face);
-
 		/* Velocity control (left). */
-		final float x1 = 0;
-		final float y1 = CAMERA_HEIGHT
+		final float y = CAMERA_HEIGHT
 				- this.mOnScreenControlBaseTextureRegion.getHeight();
 		final AnalogOnScreenControl velocityOnScreenControl = new AnalogOnScreenControl(
-				x1, y1, this.mCamera, this.mOnScreenControlBaseTextureRegion,
+				0, y, this.mCamera, this.mOnScreenControlBaseTextureRegion,
 				this.mOnScreenControlKnobTextureRegion, 0.1f,
 				this.getVertexBufferObjectManager(),
 				new IAnalogOnScreenControlListener() {
 					@Override
 					public void onControlChange(
 							final BaseOnScreenControl pBaseOnScreenControl,
-							final float pValueX, final float pValueY) {
-						physicsHandler
-								.setVelocity(pValueX * 100, pValueY * 100);
+							final float pValueX, final float pValueY)
+					{
+						onLeftControlChange(pBaseOnScreenControl, pValueX, pValueY);
 					}
 
 					@Override
 					public void onControlClick(
-							final AnalogOnScreenControl pAnalogOnScreenControl) {
-						/* Nothing. */
+							final AnalogOnScreenControl pAnalogOnScreenControl)
+					{
+						onLeftControlClick(pAnalogOnScreenControl);
 					}
 				});
 		velocityOnScreenControl.getControlBase().setBlendFunction(
@@ -146,33 +134,26 @@ public abstract class ControlsActivity extends SimpleBaseGameActivity
 		scene.setChildScene(velocityOnScreenControl);
 
 		/* Rotation control (right). */
-		final float y2 = y1;
-		final float x2 = CAMERA_WIDTH
+		final float x = CAMERA_WIDTH
 				- this.mOnScreenControlBaseTextureRegion.getWidth();
 		final AnalogOnScreenControl rotationOnScreenControl = new AnalogOnScreenControl(
-				x2, y2, this.mCamera, this.mOnScreenControlBaseTextureRegion,
+				x, y, this.mCamera, this.mOnScreenControlBaseTextureRegion,
 				this.mOnScreenControlKnobTextureRegion, 0.1f,
 				this.getVertexBufferObjectManager(),
 				new IAnalogOnScreenControlListener() {
 					@Override
 					public void onControlChange(
 							final BaseOnScreenControl pBaseOnScreenControl,
-							final float pValueX, final float pValueY) {
-						if (pValueX == x1 && pValueY == x1)
-						{
-							face.setRotation(x1);
-						}
-						else
-						{
-							face.setRotation(MathUtils.radToDeg((float) Math
-									.atan2(pValueX, -pValueY)));
-						}
+							final float pValueX, final float pValueY)
+					{
+						onRightControlChange(pBaseOnScreenControl, pValueX, pValueY);
 					}
 
 					@Override
 					public void onControlClick(
-							final AnalogOnScreenControl pAnalogOnScreenControl) {
-						/* Nothing. */
+							final AnalogOnScreenControl pAnalogOnScreenControl)
+					{
+						onRightControlClick(pAnalogOnScreenControl);
 					}
 				});
 		rotationOnScreenControl.getControlBase().setBlendFunction(
@@ -188,6 +169,20 @@ public abstract class ControlsActivity extends SimpleBaseGameActivity
 	// Methods
 	// ===========================================================
 
+	protected abstract void onLeftControlChange(
+			BaseOnScreenControl pBaseOnScreenControl,
+			float pValueX, float pValueY);
+	
+	protected abstract void onLeftControlClick(
+			final AnalogOnScreenControl pAnalogOnScreenControl);
+	
+	protected abstract void onRightControlChange(
+			BaseOnScreenControl pBaseOnScreenControl,
+			float pValueX, float pValueY);
+	
+	protected abstract void onRightControlClick(
+			final AnalogOnScreenControl pAnalogOnScreenControl);
+	
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
