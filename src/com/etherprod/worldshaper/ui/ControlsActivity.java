@@ -23,7 +23,7 @@ public abstract class ControlsActivity extends MyGameActivity
 	private ITextureRegion		mOnScreenControlKnobTextureRegion;
 
 	@Override
-	public void onCreateResources() 
+	public void onCreateResources()
 	{
 		this.mOnScreenControlTexture = new BitmapTextureAtlas(
 				this.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
@@ -39,7 +39,6 @@ public abstract class ControlsActivity extends MyGameActivity
 	@Override
 	public void onCreateScene()
 	{
-
 		/* Velocity control (left). */
 		final float y = CAMERA_HEIGHT
 				- this.mOnScreenControlBaseTextureRegion.getHeight();

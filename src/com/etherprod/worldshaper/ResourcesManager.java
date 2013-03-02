@@ -13,7 +13,7 @@ public class ResourcesManager
 {
 	private static final ResourcesManager INSTANCE = new ResourcesManager();
 
-    private MainActivity activity;
+    private MainActivity 	activity;
 
     /**
      * This function MUST be used at the beginning of game loading.
@@ -47,6 +47,15 @@ public class ResourcesManager
     {
         loadGameGraphics();
     }
+
+    //=====================================
+    //      Getters/setters functions
+    //=====================================
+
+	public MainActivity getActivity() 
+    {
+		return activity;
+	}
 
     //=====================================
     //         Private functions

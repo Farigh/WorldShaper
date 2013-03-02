@@ -11,6 +11,9 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.ui.activity.BaseGameActivity;
 
+import com.etherprod.worldshaper.ui.scene.MyScene;
+import com.etherprod.worldshaper.ui.scene.SceneManager;
+
 import android.util.DisplayMetrics;
 
 /**
@@ -27,7 +30,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 	protected static int		CAMERA_HEIGHT	= 320;
 	
 	protected Camera			camera;
-	protected Scene 			scene;
+	protected MyScene			scene;
 	
 	/**
 	 * Replace the default Engine by a 60FPS limited one
@@ -81,8 +84,10 @@ public abstract class MyGameActivity extends BaseGameActivity
 	{
 		//TODO: remove the FPDLogger
 		this.mEngine.registerUpdateHandler(new FPSLogger());
+		
+		SceneManager.getInstance().createGameScene();
+		scene = SceneManager.getInstance().getCurrentScene();
 
-		scene = new Scene();
 		this.onCreateScene();
 
 		pOnCreateSceneCallback.onCreateSceneFinished(scene);
@@ -95,6 +100,10 @@ public abstract class MyGameActivity extends BaseGameActivity
 	{
 		pOnPopulateSceneCallback.onPopulateSceneFinished();
 	}
+
+    //=====================================
+    //      Getters/setters functions
+    //=====================================
 	
 	public int getCAMERA_WIDTH()
 	{
