@@ -1,8 +1,11 @@
 package com.etherprod.worldshaper.ui;
 
+import org.andengine.engine.Engine;
+import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
+import org.andengine.engine.options.WakeLockOptions;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.util.FPSLogger;
@@ -20,6 +23,16 @@ public abstract class MyGameActivity extends BaseGameActivity
 
 	protected abstract void onCreateResources();
 	protected abstract void onCreateScene();
+	
+	/**
+	 * Replace the default Engine by a 60FPS limited one
+	 * This will avoid the game to run too fast in high end devices
+	 */
+	@Override
+	public Engine onCreateEngine(EngineOptions pEngineOptions) 
+	{
+	    return new LimitedFPSEngine(pEngineOptions, 60);
+	}
 
 	@Override
 	public EngineOptions onCreateEngineOptions() 
@@ -38,8 +51,12 @@ public abstract class MyGameActivity extends BaseGameActivity
 				ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(
 						CAMERA_WIDTH, CAMERA_HEIGHT), this.camera);
 		
-		// multi-touch needed
+		// multi-touch and music needed
 		engineOptions.getTouchOptions().setNeedsMultiTouch(true);
+		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
+
+		// wake-up phone only on screen at full brightness
+		engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
 
 		return engineOptions;
 	}
