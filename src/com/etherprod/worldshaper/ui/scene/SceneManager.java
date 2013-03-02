@@ -16,6 +16,7 @@ public class SceneManager
     private static final SceneManager INSTANCE = new SceneManager();
     
     // Game's scenes
+    private MyScene splashScene;
     private MyScene gameScene;
 
     private MyScene currentScene;
@@ -29,6 +30,7 @@ public class SceneManager
 
     public enum SceneType
     {
+    	SCENE_SPLASH,
         SCENE_GAME,
     }
 
@@ -69,6 +71,12 @@ public class SceneManager
     {
         gameScene = new GameScene();
         currentScene = gameScene;
+    }
+    
+    public void createSplashScene()
+    {
+        splashScene = new SplashScene();
+        currentScene = splashScene;
     }
 
     //=====================================

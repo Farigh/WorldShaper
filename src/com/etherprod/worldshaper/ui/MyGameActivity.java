@@ -3,6 +3,8 @@ package com.etherprod.worldshaper.ui;
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.WakeLockOptions;
@@ -30,7 +32,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 	protected static int		CAMERA_HEIGHT	= 320;
 	
 	protected Camera			camera;
-	protected MyScene			scene;
+	private   MyScene			scene;
 	
 	/**
 	 * Replace the default Engine by a 60FPS limited one
@@ -85,7 +87,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 		//TODO: remove the FPDLogger
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
-		SceneManager.getInstance().createGameScene();
+		SceneManager.getInstance().createSplashScene();
 		scene = SceneManager.getInstance().getCurrentScene();
 
 		this.onCreateScene();
@@ -98,7 +100,15 @@ public abstract class MyGameActivity extends BaseGameActivity
 				final OnPopulateSceneCallback pOnPopulateSceneCallback)
 			throws Exception
 	{
-		pOnPopulateSceneCallback.onPopulateSceneFinished();
+		mEngine.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() 
+	    {
+	            public void onTimePassed(final TimerHandler pTimerHandler) 
+	            {
+	                mEngine.unregisterUpdateHandler(pTimerHandler);
+	                // TODO: load things ?
+	            }
+	    }));
+	    pOnPopulateSceneCallback.onPopulateSceneFinished();
 	}
 
     //=====================================

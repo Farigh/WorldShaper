@@ -15,19 +15,6 @@ public abstract class WithControlsScene extends MyScene
 	private BitmapTextureAtlas	mOnScreenControlTexture;
 	private ITextureRegion		mOnScreenControlBaseTextureRegion;
 	private ITextureRegion		mOnScreenControlKnobTextureRegion;
-
-	public void onCreateResources()
-	{
-		this.mOnScreenControlTexture = new BitmapTextureAtlas(
-				activity.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
-		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mOnScreenControlTexture, activity,
-						"onscreen_control_base.png", 0, 0);
-		this.mOnScreenControlKnobTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mOnScreenControlTexture, activity,
-						"onscreen_control_knob.png", 128, 0);
-		this.mOnScreenControlTexture.load();
-	}
 	
 	@Override
     public void createScene()
@@ -92,6 +79,19 @@ public abstract class WithControlsScene extends MyScene
 
 		velocityOnScreenControl.setChildScene(rotationOnScreenControl);
     }
+
+	private void onCreateResources()
+	{
+		this.mOnScreenControlTexture = new BitmapTextureAtlas(
+				activity.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
+		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(this.mOnScreenControlTexture, activity,
+						"onscreen_control_base.png", 0, 0);
+		this.mOnScreenControlKnobTextureRegion = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(this.mOnScreenControlTexture, activity,
+						"onscreen_control_knob.png", 128, 0);
+		this.mOnScreenControlTexture.load();
+	}
 
     //=====================================
     //         Abstract functions
