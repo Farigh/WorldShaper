@@ -13,14 +13,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
-import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.ui.ControlsActivity;
 
 public class MainActivity extends ControlsActivity 
 {
-	private Player player;
-	private PhysicsWorld physicsWorld;
-	
+	private Player 				player;
+	private PhysicsWorld 		physicsWorld;
+	private ResourcesManager	resourcesManager;
+
 	@Override
 	public EngineOptions onCreateEngineOptions()
 	{
@@ -32,8 +32,10 @@ public class MainActivity extends ControlsActivity
 	public void onCreateResources()
 	{
 		super.onCreateResources();
-		TileFactory.createResources(this);
-		PlayerFactory.createResources(this);
+
+		ResourcesManager.prepareManager(this);
+	    resourcesManager = ResourcesManager.getInstance();
+	    resourcesManager.loadGameResources();
 	}
 
 	@Override

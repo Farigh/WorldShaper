@@ -15,11 +15,12 @@ import android.util.DisplayMetrics;
 
 public abstract class MyGameActivity extends BaseGameActivity
 {
-	protected static int	CAMERA_WIDTH	= 480;
-	protected static int	CAMERA_HEIGHT	= 320;
+	protected static int		CAMERA_WIDTH	= 480;
+	protected static int		CAMERA_HEIGHT	= 320;
 	
-	protected Camera		camera;
-	protected Scene 		scene;
+	protected Camera			camera;
+	protected Scene 			scene;
+
 
 	protected abstract void onCreateResources();
 	protected abstract void onCreateScene();
