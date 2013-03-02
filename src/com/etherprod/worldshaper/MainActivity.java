@@ -6,33 +6,15 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.entity.scene.Scene;
 import org.andengine.util.math.MathUtils;
 
+import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
+import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.ui.ControlsActivity;
 
 public class MainActivity extends ControlsActivity 
 {
-	// ===========================================================
-    // Constants
-    // ===========================================================
-
-	// ===========================================================
-	// Fields
-	// ===========================================================
-
 	private Player player;
-
-	// ===========================================================
-	// Constructors
-	// ===========================================================
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
-
-	// ===========================================================
-	// Methods for/from SuperClass/Interfaces
-	// ===========================================================
 	
 	@Override
 	public EngineOptions onCreateEngineOptions()
@@ -45,6 +27,7 @@ public class MainActivity extends ControlsActivity
 	public void onCreateResources()
 	{
 		super.onCreateResources();
+		TileFactory.createResources(this);
 		PlayerFactory.createResources(this);
 	}
 
@@ -52,7 +35,8 @@ public class MainActivity extends ControlsActivity
 	public Scene onCreateScene()
 	{
 		Scene scene = super.onCreateScene();
-		
+
+		Map.mapCreate(scene, this.getVertexBufferObjectManager());
 		player = PlayerFactory.getNewPlayer(scene, this);
 
 		return scene;
@@ -95,12 +79,4 @@ public class MainActivity extends ControlsActivity
 	{
 		/* Nothing. */
 	}
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
 }
