@@ -1,6 +1,7 @@
 package com.etherprod.worldshaper.ui.scene;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
@@ -60,6 +61,9 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 	@Override
 	public void createScene()
 	{
+		// set color to #000033 (image background color)
+		this.setBackground(new Background(0, 0, 51f / 255f));
+		
 		createBackground();
 		createButtons();
 	}

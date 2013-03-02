@@ -17,6 +17,7 @@ import com.etherprod.worldshaper.ui.scene.MyScene;
 import com.etherprod.worldshaper.ui.scene.SceneManager;
 
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -109,6 +110,32 @@ public abstract class MyGameActivity extends BaseGameActivity
 			}
 	    }));
 	    pOnPopulateSceneCallback.onPopulateSceneFinished();
+	}
+
+	/**
+	 * Overriding destroy method to make sure the game is fully destroyed when
+	 * leaving (some devices keep the activity alive)
+	 */
+	@Override
+	protected void onDestroy()
+	{
+	    super.onDestroy();
+	    System.exit(0);
+	}
+	
+	/**
+	 * Overriding key down method to do what we want when Back key is pressed
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{  
+	    if (keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	    	// as the back action depends on the scene, the current scene's
+	    	// method is called
+	        SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
+	    }
+	    return false; 
 	}
 
     //=====================================
