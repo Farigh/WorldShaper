@@ -4,8 +4,13 @@ import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.scene.background.Background;
+import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.util.math.MathUtils;
 
+import android.hardware.SensorManager;
+
+import com.badlogic.gdx.math.Vector2;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
@@ -15,6 +20,7 @@ import com.etherprod.worldshaper.ui.ControlsActivity;
 public class MainActivity extends ControlsActivity 
 {
 	private Player player;
+	private PhysicsWorld physicsWorld;
 	
 	@Override
 	public EngineOptions onCreateEngineOptions()
@@ -35,9 +41,18 @@ public class MainActivity extends ControlsActivity
 	public Scene onCreateScene()
 	{
 		Scene scene = super.onCreateScene();
+		// blue background
+		scene.setBackground(new Background(0.09804f, 0.6274f, 0.8784f));
+		
+		//adding gravity physics
+		physicsWorld = new PhysicsWorld(new Vector2(0, SensorManager.GRAVITY_EARTH), false);
+		scene.registerUpdateHandler(physicsWorld); 
 
-		Map.mapCreate(scene, this.getVertexBufferObjectManager());
-		player = PlayerFactory.getNewPlayer(scene, this);
+		// create map
+		Map.mapCreate(scene, this.getVertexBufferObjectManager(), physicsWorld);
+
+		// add player
+		player = PlayerFactory.getNewPlayer(scene, this, physicsWorld);
 
 		return scene;
 	}
@@ -47,7 +62,7 @@ public class MainActivity extends ControlsActivity
 			BaseOnScreenControl pBaseOnScreenControl, float pValueX, 
 			float pValueY) 
 	{
-		player.mPhysicsHandler.setVelocity(pValueX * 100, pValueY * 100);		
+		player.getBody().setLinearVelocity(new Vector2(pValueX * 50, pValueY * 50));		
 	}
 
 	@Override

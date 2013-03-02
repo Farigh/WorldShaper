@@ -1,6 +1,7 @@
 package com.etherprod.worldshaper.objects.factories;
 
 import org.andengine.entity.scene.Scene;
+import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
@@ -22,7 +23,7 @@ public class PlayerFactory
         mPlayerTextureAtlas.load();	
 	}
 	
-	public static Player getNewPlayer(Scene scene, MainActivity mainActivity)
+	public static Player getNewPlayer(Scene scene, MainActivity mainActivity, PhysicsWorld physicsWorld)
 	{
 		float centerX = (mainActivity.getCAMERA_WIDTH() - 
 				mPlayerTiledTextureRegion.getWidth()) / 2;
@@ -30,7 +31,7 @@ public class PlayerFactory
 				mPlayerTiledTextureRegion.getHeight()) / 2;
 
 		Player player = new Player(centerX, centerY, mPlayerTiledTextureRegion, 
-								   mainActivity.getVertexBufferObjectManager());
+								   mainActivity.getVertexBufferObjectManager(), physicsWorld);
 		
 		scene.attachChild(player);
 		
