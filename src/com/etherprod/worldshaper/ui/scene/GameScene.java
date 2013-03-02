@@ -46,7 +46,8 @@ public class GameScene extends WithControlsScene
     @Override
     public void onBackKeyPressed()
     {
-
+    	// go back to main menu
+    	SceneManager.getInstance().loadMenuScene(activity.getEngine());
     }
 
     @Override
@@ -58,6 +59,9 @@ public class GameScene extends WithControlsScene
     @Override
     public void disposeScene()
     {
+    	// reset camera position
+        activity.getCamera().setCenter(activity.getCAMERA_WIDTH() / 2,
+        		activity.getCAMERA_HEIGHT() / 2);
     }
 
 	@Override

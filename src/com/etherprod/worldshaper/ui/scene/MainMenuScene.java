@@ -93,12 +93,24 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 		switch(pMenuItem.getID())
         {
         	case MENU_PLAY:
+                //Load Game Scene!
+                SceneManager.getInstance().loadGameScene(activity.getEngine());
         		return true;
         	case MENU_OPTIONS:
         		return true;
         	default:
         		return false;
         }
+	}
+	
+	public void unloadTextures()
+	{
+		menuTextureAtlas.unload();
+	}
+	
+	public void loadTextures()
+	{
+		menuTextureAtlas.load();
 	}
 
 	private void createBackground()

@@ -1,6 +1,8 @@
 package com.etherprod.worldshaper.ui.scene;
 
 import org.andengine.engine.Engine;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 
 import com.etherprod.worldshaper.ResourcesManager;
 
@@ -17,7 +19,8 @@ public class SceneManager
     
     // Game's scenes
     private MyScene splashScene;
-    private MyScene menuScene;
+    private MainMenuScene menuScene;
+    private MyScene loadingScene;
     private MyScene gameScene;
 
     private MyScene currentScene;
@@ -64,7 +67,7 @@ public class SceneManager
                 break;
         }
     }
-
+    
     //=====================================
     //      Scene creation functions
     //=====================================
@@ -79,6 +82,7 @@ public class SceneManager
     {
         MainMenuScene.onCreateRessources();
         menuScene = new MainMenuScene();
+        loadingScene = new LoadingScene();
         setScene(menuScene);
         destroySplashScene();
     }
@@ -97,6 +101,42 @@ public class SceneManager
     {
     	splashScene.disposeScene();
         splashScene = null;
+    }
+
+    //=====================================
+    //       Scene loading functions
+    //=====================================
+
+    public void loadGameScene(final Engine mEngine)
+    {
+        setScene(loadingScene);
+        menuScene.unloadTextures();
+        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
+        {
+            public void onTimePassed(final TimerHandler pTimerHandler) 
+            {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                ResourcesManager.getInstance().loadGameResources();
+                gameScene = new GameScene();
+                setScene(gameScene);
+            }
+        }));
+    }
+
+    public void loadMenuScene(final Engine mEngine)
+    {
+        setScene(loadingScene);
+        gameScene.disposeScene();
+        ResourcesManager.getInstance().unloadGameResources();
+        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
+        {
+            public void onTimePassed(final TimerHandler pTimerHandler) 
+            {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                menuScene.loadTextures();
+                setScene(menuScene);
+            }
+        }));
     }
 
     //=====================================

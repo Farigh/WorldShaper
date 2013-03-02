@@ -37,6 +37,7 @@ public class TileFactory
 		TILE_FIX = PhysicsFactory.createFixtureDef(0.0f, 0.0f, 0.0f);
 		
 		// create player texture
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("");
 		mTileTextureAtlas = new BitmapTextureAtlas(mainActivity.getTextureManager(), 32, 32);
 		mTileTextureRegion = BitmapTextureAtlasTextureRegionFactory
 				.createTiledFromAsset(mTileTextureAtlas, mainActivity, "dirt.png", 0, 0, 1, 1);

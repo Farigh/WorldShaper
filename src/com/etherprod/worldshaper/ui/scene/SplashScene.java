@@ -47,7 +47,7 @@ public class SplashScene extends MyScene
 	@Override
 	public void onBackKeyPressed()
 	{
-		
+		// Can't leave while on splash screen
 	}
 
 	@Override

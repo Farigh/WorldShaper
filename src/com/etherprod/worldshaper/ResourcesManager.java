@@ -47,6 +47,14 @@ public class ResourcesManager
     {
         loadGameGraphics();
     }
+    
+    /**
+     * This function is in charge of unloading game resources
+     */
+    public void unloadGameResources()
+    {
+    	//TODO: unload game's texture
+    }
 
     //=====================================
     //      Getters/setters functions

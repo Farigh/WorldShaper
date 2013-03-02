@@ -29,6 +29,7 @@ public class PlayerFactory
 	public static void createResources(MainActivity mainActivity)
 	{
 		// create player texture
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("");
 		mPlayerTextureAtlas = new BitmapTextureAtlas(mainActivity.getTextureManager(), 32, 32);
         mPlayerTiledTextureRegion = BitmapTextureAtlasTextureRegionFactory
         		.createTiledFromAsset(mPlayerTextureAtlas, mainActivity, "face_box.png", 0, 0, 1, 1);
