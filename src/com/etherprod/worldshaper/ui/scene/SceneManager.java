@@ -17,6 +17,7 @@ public class SceneManager
     
     // Game's scenes
     private MyScene splashScene;
+    private MyScene menuScene;
     private MyScene gameScene;
 
     private MyScene currentScene;
@@ -31,6 +32,7 @@ public class SceneManager
     public enum SceneType
     {
     	SCENE_SPLASH,
+    	SCENE_MENU,
         SCENE_GAME,
     }
 
@@ -66,17 +68,35 @@ public class SceneManager
     //=====================================
     //      Scene creation functions
     //=====================================
-    
+
+    public void createSplashScene()
+    {
+        splashScene = new SplashScene();
+        currentScene = splashScene;
+    }
+
+    public void createMenuScene()
+    {
+        MainMenuScene.onCreateRessources();
+        menuScene = new MainMenuScene();
+        setScene(menuScene);
+        destroySplashScene();
+    }
+
     public void createGameScene()
     {
         gameScene = new GameScene();
         currentScene = gameScene;
     }
+
+    //=====================================
+    //     Scene destruction functions
+    //=====================================
     
-    public void createSplashScene()
+    private void destroySplashScene()
     {
-        splashScene = new SplashScene();
-        currentScene = splashScene;
+    	splashScene.disposeScene();
+        splashScene = null;
     }
 
     //=====================================

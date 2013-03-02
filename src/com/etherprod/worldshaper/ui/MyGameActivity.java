@@ -102,11 +102,11 @@ public abstract class MyGameActivity extends BaseGameActivity
 	{
 		mEngine.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() 
 	    {
-	            public void onTimePassed(final TimerHandler pTimerHandler) 
-	            {
-	                mEngine.unregisterUpdateHandler(pTimerHandler);
-	                // TODO: load things ?
-	            }
+			public void onTimePassed(final TimerHandler pTimerHandler) 
+			{
+				mEngine.unregisterUpdateHandler(pTimerHandler);
+				SceneManager.getInstance().createMenuScene();
+			}
 	    }));
 	    pOnPopulateSceneCallback.onPopulateSceneFinished();
 	}
