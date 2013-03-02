@@ -3,7 +3,6 @@ package com.etherprod.worldshaper;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.engine.options.EngineOptions;
-import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.util.math.MathUtils;
@@ -38,9 +37,9 @@ public class MainActivity extends ControlsActivity
 	}
 
 	@Override
-	public Scene onCreateScene()
+	public void onCreateScene()
 	{
-		Scene scene = super.onCreateScene();
+		super.onCreateScene();
 		// blue background
 		scene.setBackground(new Background(0.09804f, 0.6274f, 0.8784f));
 		
@@ -53,8 +52,6 @@ public class MainActivity extends ControlsActivity
 
 		// add player
 		player = PlayerFactory.getNewPlayer(scene, this, physicsWorld);
-
-		return scene;
 	}
 
 	@Override
