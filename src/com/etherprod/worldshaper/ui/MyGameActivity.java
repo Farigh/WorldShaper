@@ -115,6 +115,11 @@ public abstract class MyGameActivity extends BaseGameActivity
 		return CAMERA_HEIGHT;
 	}
 
+	public Camera getCamera()
+	{
+		return camera;
+	}
+
     //=====================================
     //         Abstract functions
     //=====================================

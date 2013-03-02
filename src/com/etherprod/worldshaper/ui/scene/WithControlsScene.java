@@ -1,4 +1,4 @@
-package com.etherprod.worldshaper.ui;
+package com.etherprod.worldshaper.ui.scene;
 
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
@@ -10,42 +10,37 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 
 import android.opengl.GLES20;
 
-/**
- * @author GARCIN David <david.garcin.pro@gmail.com>
- *
- * This class is a abstract one used to easily create game activities
- * with controls on it
- */
-public abstract class ControlsActivity extends MyGameActivity
+public abstract class WithControlsScene extends MyScene
 {
 	private BitmapTextureAtlas	mOnScreenControlTexture;
 	private ITextureRegion		mOnScreenControlBaseTextureRegion;
 	private ITextureRegion		mOnScreenControlKnobTextureRegion;
 
-	@Override
 	public void onCreateResources()
 	{
 		this.mOnScreenControlTexture = new BitmapTextureAtlas(
-				this.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
+				activity.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
 		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mOnScreenControlTexture, this,
+				.createFromAsset(this.mOnScreenControlTexture, activity,
 						"onscreen_control_base.png", 0, 0);
 		this.mOnScreenControlKnobTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mOnScreenControlTexture, this,
+				.createFromAsset(this.mOnScreenControlTexture, activity,
 						"onscreen_control_knob.png", 128, 0);
 		this.mOnScreenControlTexture.load();
 	}
-
+	
 	@Override
-	public void onCreateScene()
-	{
+    public void createScene()
+    {
+		onCreateResources();
+
 		/* Velocity control (left). */
-		final float y = CAMERA_HEIGHT
+		final float y = activity.getCAMERA_HEIGHT()
 				- this.mOnScreenControlBaseTextureRegion.getHeight();
 		final AnalogOnScreenControl velocityOnScreenControl = new AnalogOnScreenControl(
-				0, y, this.camera, this.mOnScreenControlBaseTextureRegion,
+				0, y, activity.getCamera(), this.mOnScreenControlBaseTextureRegion,
 				this.mOnScreenControlKnobTextureRegion, 0.1f,
-				this.getVertexBufferObjectManager(),
+				activity.getVertexBufferObjectManager(),
 				new IAnalogOnScreenControlListener() {
 					@Override
 					public void onControlChange(
@@ -66,15 +61,15 @@ public abstract class ControlsActivity extends MyGameActivity
 				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		velocityOnScreenControl.getControlBase().setAlpha(0.5f);
 
-		this.scene.setChildScene(velocityOnScreenControl);
+		this.setChildScene(velocityOnScreenControl);
 
 		/* Rotation control (right). */
-		final float x = CAMERA_WIDTH
+		final float x = activity.getCAMERA_WIDTH()
 				- this.mOnScreenControlBaseTextureRegion.getWidth();
 		final AnalogOnScreenControl rotationOnScreenControl = new AnalogOnScreenControl(
-				x, y, this.camera, this.mOnScreenControlBaseTextureRegion,
+				x, y, activity.getCamera(), this.mOnScreenControlBaseTextureRegion,
 				this.mOnScreenControlKnobTextureRegion, 0.1f,
-				this.getVertexBufferObjectManager(),
+				activity.getVertexBufferObjectManager(),
 				new IAnalogOnScreenControlListener() {
 					@Override
 					public void onControlChange(
@@ -96,7 +91,7 @@ public abstract class ControlsActivity extends MyGameActivity
 		rotationOnScreenControl.getControlBase().setAlpha(0.5f);
 
 		velocityOnScreenControl.setChildScene(rotationOnScreenControl);
-	}
+    }
 
     //=====================================
     //         Abstract functions
