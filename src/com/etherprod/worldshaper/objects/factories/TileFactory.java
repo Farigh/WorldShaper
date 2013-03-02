@@ -13,12 +13,24 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.etherprod.worldshaper.MainActivity;
 
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is a factory pattern based one in charge of creating
+ * the maps tiles and its related resources
+ */
 public class TileFactory
 {
 	private static BitmapTextureAtlas	mTileTextureAtlas;
     private static TiledTextureRegion	mTileTextureRegion;
     private static FixtureDef TILE_FIX;
 	
+    /**
+     * This function MUST be used at the beginning of game loading.
+     * It will be called by the @ResourcesManager.
+     * 
+     * @param mainActivity The main activity of the game
+     */
 	public static void createResources(MainActivity mainActivity)
 	{
 		// Create physics FixtureDef
@@ -31,15 +43,24 @@ public class TileFactory
 		mTileTextureAtlas.load();	
 	}
 	
+	/**
+	 * Creates a new tile
+	 * 
+	 * @param scene The game's scene
+	 * @param mainActivity The main activity
+	 * @param physicsWorld The physics handler
+	 * @param x The x position of the tile
+	 * @param y The y position of the tile
+	 * 
+	 * @return Sprite created
+	 */
 	public static Sprite addNewTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y)
 	{
-		Sprite tile = new Sprite(x, y, mTileTextureRegion, 
-									vertexBufferObjectManager);
+		Sprite tile = new Sprite(x, y, mTileTextureRegion, vertexBufferObjectManager);
 		
 		// set physics to not affect them
-		PhysicsFactory.createBoxBody(physicsWorld, tile, BodyType.StaticBody,
-				TILE_FIX);
+		PhysicsFactory.createBoxBody(physicsWorld, tile, BodyType.StaticBody, TILE_FIX);
 
 		scene.attachChild(tile);
 

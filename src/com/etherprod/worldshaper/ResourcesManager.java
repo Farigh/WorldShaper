@@ -6,7 +6,7 @@ import com.etherprod.worldshaper.objects.factories.TileFactory;
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
  *
- * This class is a singleton based one in charge of creating and
+ * This class is a singleton pattern based one in charge of creating and
  * managing all resources used within our game
  */
 public class ResourcesManager

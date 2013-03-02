@@ -15,6 +15,11 @@ import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.ui.ControlsActivity;
 
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is a the main activity of the game
+ */
 public class MainActivity extends ControlsActivity 
 {
 	private Player 				player;

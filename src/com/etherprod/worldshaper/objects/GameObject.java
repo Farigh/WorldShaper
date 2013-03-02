@@ -4,24 +4,25 @@ import org.andengine.engine.handler.physics.PhysicsHandler;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
- 
+
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is a abstract one used to easily create game objects
+ * with a basic physics handler without collision support
+ */
 public abstract class GameObject extends AnimatedSprite 
 {
- 
-    // ===========================================================
-    // Constants
-    // ===========================================================
- 
-    // ===========================================================
-    // Fields
-    // ===========================================================
- 
-    public PhysicsHandler mPhysicsHandler;
- 
-    // ===========================================================
-    // Constructors
-    // ===========================================================
- 
+	public PhysicsHandler mPhysicsHandler;
+	
+    /**
+     * This is the game object constructor
+     * 
+     * @param pX The x position of the object
+     * @param pY The y position of the object
+     * @param pTiledTextureRegion The texture region
+     * @param pVertexBufferObjectManager The vertex buffer manager
+     */
     public GameObject(final float pX, final float pY, final TiledTextureRegion pTiledTextureRegion, 
     		          final VertexBufferObjectManager pVertexBufferObjectManager)
     {
@@ -30,14 +31,6 @@ public abstract class GameObject extends AnimatedSprite
         this.registerUpdateHandler(this.mPhysicsHandler);
     }
  
-    // ===========================================================
-    // Getter & Setter
-    // ===========================================================
- 
-    // ===========================================================
-    // Methods for/from SuperClass/Interfaces
-    // ===========================================================
- 
     @Override
     protected void onManagedUpdate(float pSecondsElapsed)
     {
@@ -45,10 +38,10 @@ public abstract class GameObject extends AnimatedSprite
  
         super.onManagedUpdate(pSecondsElapsed);
     }
- 
-    // ===========================================================
-    // Methods
-    // ===========================================================
- 
+
+    //=====================================
+    //         Abstract functions
+    //=====================================
+	
     public abstract void move();
 }

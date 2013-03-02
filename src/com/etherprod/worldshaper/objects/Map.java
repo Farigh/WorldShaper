@@ -9,15 +9,32 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is in charge of the game's map management.
+ */
 public class Map
 {
 	private static ArrayList<Sprite> _Tiles	= new ArrayList<Sprite>();
 
+	/**
+	 * This function returns the map's objects list (tiles)
+	 * 
+	 * @return The map's tile array
+	 */
 	static public ArrayList<Sprite> getTilesList()
 	{
 		return _Tiles;
 	}
 
+	/**
+	 * Creates the map adding each tiles
+	 * 
+	 * @param scene The games scene
+	 * @param vertexBufferObjectManager The vertex buffer manager
+	 * @param physicsWorld the game physics object
+	 */
 	public static void mapCreate(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld) 
 	{

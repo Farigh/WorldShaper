@@ -9,11 +9,23 @@ import org.andengine.opengl.texture.region.TiledTextureRegion;
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.objects.Player;
 
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is a factory pattern based one in charge of creating
+ * the player object and its related resources
+ */
 public class PlayerFactory
 {
 	private static BitmapTextureAtlas	mPlayerTextureAtlas;
     private static TiledTextureRegion	mPlayerTiledTextureRegion;
 	
+    /**
+     * This function MUST be used at the beginning of game loading.
+     * It will be called by the @ResourcesManager.
+     * 
+     * @param mainActivity The main activity of the game
+     */
 	public static void createResources(MainActivity mainActivity)
 	{
 		// create player texture
@@ -23,6 +35,15 @@ public class PlayerFactory
         mPlayerTextureAtlas.load();	
 	}
 	
+	/**
+	 * Creates a new player
+	 * 
+	 * @param scene The game's scene
+	 * @param mainActivity The main activity
+	 * @param physicsWorld The physics handler
+	 * 
+	 * @return The player object created
+	 */
 	public static Player getNewPlayer(Scene scene, MainActivity mainActivity, PhysicsWorld physicsWorld)
 	{
 		float centerX = (mainActivity.getCAMERA_WIDTH() - 

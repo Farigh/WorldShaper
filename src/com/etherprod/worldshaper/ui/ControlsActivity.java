@@ -10,6 +10,12 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 
 import android.opengl.GLES20;
 
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is a abstract one used to easily create game activities
+ * with controls on it
+ */
 public abstract class ControlsActivity extends MyGameActivity
 {
 	private BitmapTextureAtlas	mOnScreenControlTexture;
@@ -93,9 +99,9 @@ public abstract class ControlsActivity extends MyGameActivity
 		velocityOnScreenControl.setChildScene(rotationOnScreenControl);
 	}
 
-	// ===========================================================
-	// Methods
-	// ===========================================================
+    //=====================================
+    //         Abstract functions
+    //=====================================
 
 	protected abstract void onLeftControlChange(
 			BaseOnScreenControl pBaseOnScreenControl,
@@ -110,8 +116,4 @@ public abstract class ControlsActivity extends MyGameActivity
 	
 	protected abstract void onRightControlClick(
 			final AnalogOnScreenControl pAnalogOnScreenControl);
-	
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
 }

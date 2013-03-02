@@ -13,6 +13,14 @@ import org.andengine.ui.activity.BaseGameActivity;
 
 import android.util.DisplayMetrics;
 
+/**
+ * @author GARCIN David <david.garcin.pro@gmail.com>
+ *
+ * This class is a abstract one used to easily create game activity
+ * which is full-screened, supporting multi_touch and screen orientation.
+ * The camera and the scene are already created.
+ * It has a limited to 60FPS Engine 
+ */
 public abstract class MyGameActivity extends BaseGameActivity
 {
 	protected static int		CAMERA_WIDTH	= 480;
@@ -20,10 +28,6 @@ public abstract class MyGameActivity extends BaseGameActivity
 	
 	protected Camera			camera;
 	protected Scene 			scene;
-
-
-	protected abstract void onCreateResources();
-	protected abstract void onCreateScene();
 	
 	/**
 	 * Replace the default Engine by a 60FPS limited one
@@ -101,4 +105,11 @@ public abstract class MyGameActivity extends BaseGameActivity
 	{
 		return CAMERA_HEIGHT;
 	}
+
+    //=====================================
+    //         Abstract functions
+    //=====================================
+
+	protected abstract void onCreateResources();
+	protected abstract void onCreateScene();
 }
