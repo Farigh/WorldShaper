@@ -38,7 +38,7 @@ public class GameScene extends HUDScene
 		this.registerUpdateHandler(physicsWorld); 
 
 		// create map
-		Map.mapCreate(this, activity.getVertexBufferObjectManager(), physicsWorld);
+		Map.mapCreate(this, activity, physicsWorld);
 
 		// add player
 		player = PlayerFactory.getNewPlayer(this, activity, physicsWorld);

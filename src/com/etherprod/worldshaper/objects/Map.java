@@ -7,8 +7,11 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
+import com.etherprod.worldshaper.util.IntVector2;
+import com.etherprod.worldshaper.util.map.MapXMLParser;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -36,21 +39,38 @@ public class Map
 	 * @param vertexBufferObjectManager The vertex buffer manager
 	 * @param physicsWorld the game physics object
 	 */
-	public static void mapCreate(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
+	public static void mapCreate(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld) 
 	{
-		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, 100, 50,
-				TileType.DIRT));
-		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, 150, 100,
-				TileType.DIRT));
-		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, 200, 150,
-				TileType.DIRT));
-		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, 250, 200,
-				TileType.DIRT));
+		MapXMLParser parser = new MapXMLParser(scene, activity.getVertexBufferObjectManager(), physicsWorld);
+		
+		IntVector2 bound = parser.createMapFromFile(activity.getAssets(), "levels/level_test.xml");
+
+		// top
+		for (int i = 0; i < bound.y; i += 16)
+			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
+					physicsWorld, i, 0, TileType.DIRT));
 
 		// ground
-		for (int i = 0; i < 800; i += 16)
-			_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, i, 400,
-					TileType.DIRT));
+		for (int i = 0; i < bound.y; i += 16)
+			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
+					physicsWorld, i, bound.x, TileType.DIRT));
+
+		// left
+		for (int i = 0; i < bound.x; i += 16)
+			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
+					physicsWorld, 0, i, TileType.DIRT));
+
+		// right
+		for (int i = 0; i < bound.x; i += 16)
+			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
+					physicsWorld, bound.y, i, TileType.DIRT));
+	}
+
+	public static void addTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
+			PhysicsWorld physicsWorld, int x, int y, TileType tileType)
+	{
+		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
+				tileType));
 	}
 }

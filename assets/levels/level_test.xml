@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level width="1000" height="780">
+    <entity x="132" y="370" type="DIRT"/>
+    <entity x="164" y="370" type="DIRT"/>
+    <entity x="196" y="370" type="DIRT"/>
+    <entity x="218" y="280" type="DIRT"/>
+    <entity x="250" y="280" type="DIRT"/>
+    <entity x="282" y="280" type="DIRT"/>
+    <entity x="368" y="280" type="ROCK"/>
+    <entity x="400" y="280" type="ROCK"/>
+    <entity x="432" y="280" type="ROCK"/>
+    <entity x="518" y="160" type="COPPER"/>
+    <entity x="550" y="160" type="COPPER"/>
+    <entity x="582" y="160" type="COPPER"/>
+    <entity x="652" y="230" type="ROCK"/>
+    <entity x="684" y="230" type="ROCK"/>
+    <entity x="716" y="230" type="ROCK"/>
+    <entity x="400" y="200" type="COIN"/>
+    <entity x="500" y="70" type="COIN"/>
+    <entity x="600" y="70" type="COIN"/>
+</level>

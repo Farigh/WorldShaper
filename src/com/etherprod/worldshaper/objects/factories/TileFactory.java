@@ -75,7 +75,7 @@ public class TileFactory
 	public static void createResources(MainActivity activity)
 	{
 		// Create physics FixtureDef
-		TILE_FIX = PhysicsFactory.createFixtureDef(0.0f, 0.0f, 0.0f);
+		TILE_FIX = PhysicsFactory.createFixtureDef(0.0f, 0.01f, 0.5f);
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/tiles/");
 	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
