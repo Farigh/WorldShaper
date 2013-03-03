@@ -37,6 +37,8 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 	
 	public static void onCreateRessources()
 	{
+		ResourcesManager.getInstance().loadMenuResources();
+		
 		MainActivity activity = ResourcesManager.getInstance().getActivity();	
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("menu/");

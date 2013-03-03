@@ -19,7 +19,7 @@ import com.etherprod.worldshaper.ui.scene.SceneManager.SceneType;
  *
  * This is the game scene
  */
-public class GameScene extends WithControlsScene
+public class GameScene extends HUDScene
 {
 	private static Player 	player;
 	private PhysicsWorld	physicsWorld;
@@ -59,6 +59,8 @@ public class GameScene extends WithControlsScene
     @Override
     public void disposeScene()
     {
+    	super.disposeScene();
+
     	// reset camera position
         activity.getCamera().setCenter(activity.getCAMERA_WIDTH() / 2,
         		activity.getCAMERA_HEIGHT() / 2);

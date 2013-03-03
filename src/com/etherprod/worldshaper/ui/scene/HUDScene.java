@@ -1,24 +1,31 @@
 package com.etherprod.worldshaper.ui.scene;
 
+import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl.IAnalogOnScreenControlListener;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.util.HorizontalAlign;
 
 import android.opengl.GLES20;
 
-public abstract class WithControlsScene extends MyScene
+public abstract class HUDScene extends MyScene
 {
 	private BitmapTextureAtlas	mOnScreenControlTexture;
 	private ITextureRegion		mOnScreenControlBaseTextureRegion;
 	private ITextureRegion		mOnScreenControlKnobTextureRegion;
+	private HUD 				gameHUD;
+	private Text 				scoreText;
 	
 	@Override
     public void createScene()
     {
+		createHUD();
 		onCreateResources();
 
 		/* Velocity control (left). */
@@ -48,7 +55,7 @@ public abstract class WithControlsScene extends MyScene
 				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		velocityOnScreenControl.getControlBase().setAlpha(0.5f);
 
-		this.setChildScene(velocityOnScreenControl);
+		gameHUD.setChildScene(velocityOnScreenControl);
 
 		/* Rotation control (right). */
 		final float x = activity.getCAMERA_WIDTH()
@@ -92,7 +99,29 @@ public abstract class WithControlsScene extends MyScene
 						"onscreen_control_knob.png", 128, 0);
 		this.mOnScreenControlTexture.load();
 	}
+	
+	private void createHUD()
+	{
+	    gameHUD = new HUD();
 
+	    // adding life text
+	    scoreText = new Text(0, 0, resourcesManager.getFont(), "Life : 9999/9999", 
+	    		new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
+	    scoreText.setSkewCenter(0, 0);    
+	    scoreText.setText("Life: 50/50");
+	    scoreText.setScale(0.6f);
+	    gameHUD.attachChild(scoreText);
+
+	    activity.getCamera().setHUD(gameHUD);
+	}
+
+	@Override
+	public void disposeScene()
+	{
+		// remove HUD on scene leave
+	    activity.getCamera().setHUD(null);
+	}
+	
     //=====================================
     //         Abstract functions
     //=====================================

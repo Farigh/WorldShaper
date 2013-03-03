@@ -1,5 +1,12 @@
 package com.etherprod.worldshaper;
 
+import org.andengine.opengl.font.Font;
+import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.util.color.Color;
+
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 
@@ -15,6 +22,12 @@ public class ResourcesManager
 
     private MainActivity 	activity;
 
+    //=====================================
+    //              Resources
+    //=====================================
+    
+    public Font font;
+
     /**
      * This function MUST be used at the beginning of game loading.
      * It will prepare Resources Manager properly, setting all needed parameters, 
@@ -29,7 +42,7 @@ public class ResourcesManager
     {
         getInstance().activity = activity;
     }
-    
+
     /**
      * This function return the ResourcesManager instance
      * 
@@ -39,7 +52,15 @@ public class ResourcesManager
     {
         return INSTANCE;
     }
-    
+
+    /**
+     * This function is in charge of loading game resources
+     */
+    public void loadMenuResources()
+    {
+    	loadMenuFonts();
+    }
+
     /**
      * This function is in charge of loading game resources
      */
@@ -47,7 +68,7 @@ public class ResourcesManager
     {
         loadGameGraphics();
     }
-    
+
     /**
      * This function is in charge of unloading game resources
      */
@@ -65,6 +86,11 @@ public class ResourcesManager
 		return activity;
 	}
 
+	public Font getFont()
+	{
+		return font;
+	}
+
     //=====================================
     //         Private functions
     //=====================================
@@ -73,5 +99,18 @@ public class ResourcesManager
     {
 		TileFactory.createResources(activity);
 		PlayerFactory.createResources(activity);
+    }
+
+    private void loadMenuFonts()
+    {
+		FontFactory.setAssetBasePath("fonts/");
+	    final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
+	    		TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+	    
+	    font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
+	    		activity.getAssets(), "font.ttf", 50, false, Color.WHITE_ARGB_PACKED_INT, 2,
+	    		Color.BLACK_ARGB_PACKED_INT);
+
+	    font.load();
     }
 }
