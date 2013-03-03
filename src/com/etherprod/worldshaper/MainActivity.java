@@ -11,8 +11,6 @@ import com.etherprod.worldshaper.ui.MyGameActivity;
  */
 public class MainActivity extends MyGameActivity 
 {
-	private ResourcesManager	resourcesManager;
-
 	@Override
 	public EngineOptions onCreateEngineOptions()
 	{
@@ -24,8 +22,6 @@ public class MainActivity extends MyGameActivity
 	public void onCreateResources()
 	{
 		ResourcesManager.prepareManager(this);
-	    resourcesManager = ResourcesManager.getInstance();
-	    resourcesManager.loadGameResources();
 	}
 
 	@Override

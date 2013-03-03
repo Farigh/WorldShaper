@@ -9,10 +9,11 @@ import org.andengine.util.math.MathUtils;
 import android.hardware.SensorManager;
 
 import com.badlogic.gdx.math.Vector2;
+import com.etherprod.worldshaper.SceneManager;
+import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
-import com.etherprod.worldshaper.ui.scene.SceneManager.SceneType;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>

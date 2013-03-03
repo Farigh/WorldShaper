@@ -13,8 +13,8 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.ui.activity.BaseGameActivity;
 
+import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.ui.scene.MyScene;
-import com.etherprod.worldshaper.ui.scene.SceneManager;
 
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;

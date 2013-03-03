@@ -5,7 +5,7 @@ import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.Font;
 import org.andengine.util.color.Color;
 
-import com.etherprod.worldshaper.ui.scene.SceneManager.SceneType;
+import com.etherprod.worldshaper.SceneManager.SceneType;
 
 public class LoadingScene extends MyScene
 {

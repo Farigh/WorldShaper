@@ -9,7 +9,7 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.util.GLState;
 
-import com.etherprod.worldshaper.ui.scene.SceneManager.SceneType;
+import com.etherprod.worldshaper.SceneManager.SceneType;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>

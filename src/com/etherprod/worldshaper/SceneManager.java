@@ -1,10 +1,14 @@
-package com.etherprod.worldshaper.ui.scene;
+package com.etherprod.worldshaper;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 
-import com.etherprod.worldshaper.ResourcesManager;
+import com.etherprod.worldshaper.ui.scene.GameScene;
+import com.etherprod.worldshaper.ui.scene.LoadingScene;
+import com.etherprod.worldshaper.ui.scene.MainMenuScene;
+import com.etherprod.worldshaper.ui.scene.MyScene;
+import com.etherprod.worldshaper.ui.scene.SplashScene;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>

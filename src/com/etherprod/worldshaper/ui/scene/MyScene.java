@@ -4,7 +4,7 @@ import org.andengine.entity.scene.Scene;
 
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.ResourcesManager;
-import com.etherprod.worldshaper.ui.scene.SceneManager.SceneType;
+import com.etherprod.worldshaper.SceneManager.SceneType;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>

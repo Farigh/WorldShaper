@@ -21,7 +21,8 @@ import org.andengine.util.debug.Debug;
 
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.ResourcesManager;
-import com.etherprod.worldshaper.ui.scene.SceneManager.SceneType;
+import com.etherprod.worldshaper.SceneManager;
+import com.etherprod.worldshaper.SceneManager.SceneType;
 
 public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 {
