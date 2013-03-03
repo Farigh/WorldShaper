@@ -61,6 +61,9 @@ public class GameScene extends HUDScene
     public void disposeScene()
     {
     	super.disposeScene();
+        
+        // don't follow player anymore
+    	activity.getCamera().setChaseEntity(null);
 
     	// reset camera position
         activity.getCamera().setCenter(activity.getCAMERA_WIDTH() / 2,
@@ -73,7 +76,13 @@ public class GameScene extends HUDScene
 			float pValueY) 
 	{
 		Player player = GameScene.getPlayer();
-		player.getBody().setLinearVelocity(new Vector2(pValueX * 50, pValueY * 50));		
+		
+		if (pValueX != 0 && pValueY != 0)
+			player.walk();
+		else
+			player.stop();
+		
+		player.getBody().setLinearVelocity(5 * pValueX, player.getBody().getLinearVelocity().y);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import com.etherprod.worldshaper.util.map.MapXMLParser;
  */
 public class Map
 {
+	private final static int TILE_SIZE = 32;
 	private static ArrayList<Sprite> _Tiles	= new ArrayList<Sprite>();
 
 	/**
@@ -47,22 +48,22 @@ public class Map
 		IntVector2 bound = parser.createMapFromFile(activity.getAssets(), "levels/level_test.xml");
 
 		// top
-		for (int i = 0; i < bound.y; i += 16)
+		for (int i = 0; i < bound.y; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
 					physicsWorld, i, 0, TileType.DIRT));
 
 		// ground
-		for (int i = 0; i < bound.y; i += 16)
+		for (int i = 0; i < bound.y; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
 					physicsWorld, i, bound.x, TileType.DIRT));
 
 		// left
-		for (int i = 0; i < bound.x; i += 16)
+		for (int i = 0; i < bound.x; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
 					physicsWorld, 0, i, TileType.DIRT));
 
 		// right
-		for (int i = 0; i < bound.x; i += 16)
+		for (int i = 0; i < bound.x; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
 					physicsWorld, bound.y, i, TileType.DIRT));
 	}

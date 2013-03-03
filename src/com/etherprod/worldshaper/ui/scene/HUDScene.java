@@ -89,6 +89,7 @@ public abstract class HUDScene extends MyScene
 
 	private void onCreateResources()
 	{
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/controls/");
 		this.mOnScreenControlTexture = new BitmapTextureAtlas(
 				activity.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
 		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
