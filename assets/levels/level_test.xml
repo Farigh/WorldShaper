@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <level width="1000" height="780">
+    <spawn  x="150" y="340"/>
     <entity x="132" y="370" type="DIRT"/>
     <entity x="164" y="370" type="DIRT"/>
     <entity x="196" y="370" type="DIRT"/>

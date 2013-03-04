@@ -8,9 +8,10 @@ import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import com.etherprod.worldshaper.MainActivity;
+import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
-import com.etherprod.worldshaper.util.IntVector2;
+import com.etherprod.worldshaper.util.map.MapData;
 import com.etherprod.worldshaper.util.map.MapXMLParser;
 
 /**
@@ -40,32 +41,35 @@ public class Map
 	 * @param vertexBufferObjectManager The vertex buffer manager
 	 * @param physicsWorld the game physics object
 	 */
-	public static void mapCreate(Scene scene, MainActivity activity,
+	public static Player mapCreate(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld) 
 	{
 		MapXMLParser parser = new MapXMLParser(scene, activity.getVertexBufferObjectManager(), physicsWorld);
 		
-		IntVector2 bound = parser.createMapFromFile(activity.getAssets(), "levels/level_test.xml");
+		MapData mapData = parser.createMapFromFile(activity.getAssets(), "levels/level_test.xml");
 
 		// top
-		for (int i = 0; i < bound.y; i += TILE_SIZE)
+		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
 					physicsWorld, i, 0, TileType.DIRT));
 
 		// ground
-		for (int i = 0; i < bound.y; i += TILE_SIZE)
+		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, i, bound.x, TileType.DIRT));
+					physicsWorld, i, mapData.getMapSize().x, TileType.DIRT));
 
 		// left
-		for (int i = 0; i < bound.x; i += TILE_SIZE)
+		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
 					physicsWorld, 0, i, TileType.DIRT));
 
 		// right
-		for (int i = 0; i < bound.x; i += TILE_SIZE)
+		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, bound.y, i, TileType.DIRT));
+					physicsWorld, mapData.getMapSize().y, i, TileType.DIRT));
+
+		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, mapData.getMapSpawn().x,
+				 mapData.getMapSpawn().y);
 	}
 
 	public static void addTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,

@@ -16,13 +16,12 @@ import android.content.res.AssetManager;
 
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
-import com.etherprod.worldshaper.util.IntVector2;
 
 public class MapXMLParser extends DefaultHandler
 {
-	//private String		tmpVal;
-	private MapXMLData	tmpData;
-	private IntVector2 tmpBound;
+	//private String	tmpVal;
+	private MapData		mapData;
+	private MapEntity	tmpEntity;
 	
 	private Scene scene;
 	private VertexBufferObjectManager vertexBufferObjectManager;
@@ -37,8 +36,9 @@ public class MapXMLParser extends DefaultHandler
 		this.physicsWorld = physicsWorld;
 	}
 
-	public IntVector2 createMapFromFile(AssetManager assetManager, String file)
+	public MapData createMapFromFile(AssetManager assetManager, String file)
 	{
+		mapData = new MapData();
 		//get a factory
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		
@@ -54,7 +54,7 @@ public class MapXMLParser extends DefaultHandler
 			e.printStackTrace();
 		}
 		
-		return tmpBound;
+		return mapData;
 	}
 	
 	//Event Handlers
@@ -66,16 +66,21 @@ public class MapXMLParser extends DefaultHandler
 		if (qName.equalsIgnoreCase("entity"))
 		{
 			//create a new instance of employee
-			tmpData = new MapXMLData();
-			tmpData.type = attributes.getValue("type");
-			tmpData.x = Integer.parseInt(attributes.getValue("x"));
-			tmpData.y = Integer.parseInt(attributes.getValue("y"));
+			tmpEntity = new MapEntity(Integer.parseInt(attributes.getValue("x")),
+					Integer.parseInt(attributes.getValue("y")),
+					attributes.getValue("type"));
 		}
 		
 		if (qName.equalsIgnoreCase("level"))
 		{
-			tmpBound = new IntVector2(Integer.parseInt(attributes.getValue("height")),
+			mapData.setMapSize(Integer.parseInt(attributes.getValue("height")),
 					Integer.parseInt(attributes.getValue("width")));
+		}
+		
+		if (qName.equalsIgnoreCase("spawn"))
+		{
+			mapData.setMapSpawn(Integer.parseInt(attributes.getValue("x")),
+					Integer.parseInt(attributes.getValue("y")));
 		}
 	}
 
@@ -88,8 +93,8 @@ public class MapXMLParser extends DefaultHandler
 	{
 		if(qName.equalsIgnoreCase("entity"))
 		{
-			Map.addTile(scene, vertexBufferObjectManager, physicsWorld, tmpData.x, tmpData.y,
-					TileType.valueOf(tmpData.type));
+			Map.addTile(scene, vertexBufferObjectManager, physicsWorld, tmpEntity.getX(),
+					tmpEntity.getY(), TileType.valueOf(tmpEntity.getType()));
 		}
 	}
 }

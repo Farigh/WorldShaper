@@ -57,17 +57,15 @@ public class PlayerFactory
 	 * @param scene The game's scene
 	 * @param activity The main activity
 	 * @param physicsWorld The physics handler
+	 * @param y 
+	 * @param x 
 	 * 
 	 * @return The player object created
 	 */
-	public static Player getNewPlayer(Scene scene, MainActivity activity, PhysicsWorld physicsWorld)
+	public static Player getNewPlayer(Scene scene, MainActivity activity, PhysicsWorld physicsWorld,
+			int x, int y)
 	{
-		float centerX = (activity.getCAMERA_WIDTH() - 
-				player_region.getWidth()) / 2;
-		float centerY = (activity.getCAMERA_HEIGHT() - 
-				player_region.getHeight()) / 2;
-
-		Player player = new Player(centerX, centerY, player_region, 
+		Player player = new Player(x, y, player_region, 
 								   activity, physicsWorld);
 		
 		scene.attachChild(player);

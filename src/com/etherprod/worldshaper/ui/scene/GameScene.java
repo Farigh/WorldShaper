@@ -13,7 +13,6 @@ import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
-import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -38,10 +37,7 @@ public class GameScene extends HUDScene
 		this.registerUpdateHandler(physicsWorld); 
 
 		// create map
-		Map.mapCreate(this, activity, physicsWorld);
-
-		// add player
-		player = PlayerFactory.getNewPlayer(this, activity, physicsWorld);
+		player = Map.mapCreate(this, activity, physicsWorld);
     }
 
     @Override
