@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
@@ -54,23 +56,21 @@ public class Map
 		
 		// top
 		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
-			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, i, -TILE_SIZE, TileType.DIRT));
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i, -TILE_SIZE);
 
 		// ground
 		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
-			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, i, mapData.getMapSize().x, TileType.DIRT));
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i, 
+					mapData.getMapSize().x);
 
 		// left
 		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
-			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, -TILE_SIZE, i, TileType.DIRT));
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, -TILE_SIZE, i);
 
 		// right
 		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
-			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, mapData.getMapSize().y, i, TileType.DIRT));
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, 
+					mapData.getMapSize().y, i);
 
 		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, mapData.getMapSpawn().x,
 				 mapData.getMapSpawn().y);
@@ -81,5 +81,12 @@ public class Map
 	{
 		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
 				tileType));
+	}
+	
+	public static void addBound(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
+			PhysicsWorld physicsWorld, int x, int y)
+	{
+		PhysicsFactory.createBoxBody(physicsWorld, x + (TILE_SIZE /2), y + (TILE_SIZE / 2), 
+				TILE_SIZE, TILE_SIZE, BodyType.StaticBody, TileFactory.TILE_FIX);
 	}
 }

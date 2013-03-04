@@ -36,14 +36,15 @@ public class TileFactory
 	// Game Texture Regions
 	public static ArrayList<ITextureRegion>	textureRegionList = new ArrayList<ITextureRegion>();
 
-	private static FixtureDef TILE_FIX;
+	public static final FixtureDef TILE_FIX = PhysicsFactory.createFixtureDef(0.0f, 0.01f, 0.5f);;
 	
 	public enum TileType
 	{
 		DIRT("dirt.png"),
 		COPPER("copper.png"),
 		ROCK("rock.png"),
-		COIN("coin.png");
+		COIN("coin.png"), 
+		BOUNDS("");
 
 		private final int value;
 		private final String textureFile;
@@ -74,17 +75,15 @@ public class TileFactory
      */
 	public static void createResources(MainActivity activity)
 	{
-		// Create physics FixtureDef
-		TILE_FIX = PhysicsFactory.createFixtureDef(0.0f, 0.01f, 0.5f);
-		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/tiles/");
 	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
 	    		1024, TextureOptions.BILINEAR);
 
 	    for (TileType tileType : TileType.values())
 	    {
-	    	textureRegionList.add(BitmapTextureAtlasTextureRegionFactory
-		    		.createFromAsset(gameTextureAtlas, activity, tileType.getTextureFile()));
+	    	if (tileType != TileType.BOUNDS)
+	    		textureRegionList.add(BitmapTextureAtlasTextureRegionFactory
+	    				.createFromAsset(gameTextureAtlas, activity, tileType.getTextureFile()));
 	    }
 
 	    try 
