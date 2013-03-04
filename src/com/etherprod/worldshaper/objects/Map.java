@@ -48,10 +48,14 @@ public class Map
 		
 		MapData mapData = parser.createMapFromFile(activity.getAssets(), "levels/level_test.xml");
 
+		// set camera bounds
+		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y, mapData.getMapSize().x); 
+		activity.getCamera().setBoundsEnabled(true);
+		
 		// top
 		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, i, 0, TileType.DIRT));
+					physicsWorld, i, -TILE_SIZE, TileType.DIRT));
 
 		// ground
 		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
@@ -61,7 +65,7 @@ public class Map
 		// left
 		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
 			_Tiles.add(TileFactory.addNewTile(scene, activity.getVertexBufferObjectManager(), 
-					physicsWorld, 0, i, TileType.DIRT));
+					physicsWorld, -TILE_SIZE, i, TileType.DIRT));
 
 		// right
 		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)

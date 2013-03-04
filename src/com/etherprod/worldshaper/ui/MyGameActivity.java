@@ -2,7 +2,7 @@ package com.etherprod.worldshaper.ui;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
-import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
@@ -32,7 +32,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 	protected static int		CAMERA_WIDTH	= 480;
 	protected static int		CAMERA_HEIGHT	= 320;
 	
-	protected Camera			camera;
+	protected BoundCamera			camera;
 	private   MyScene			scene;
 	
 	/**
@@ -55,7 +55,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 		CAMERA_WIDTH = metrics.widthPixels;
 
 		// Sets the camera
-		this.camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.camera = new BoundCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 
 		// Sets the engine options to landscape
 		final EngineOptions engineOptions = new EngineOptions(true,
@@ -152,7 +152,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 		return CAMERA_HEIGHT;
 	}
 
-	public Camera getCamera()
+	public BoundCamera getCamera()
 	{
 		return camera;
 	}

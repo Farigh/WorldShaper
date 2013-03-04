@@ -61,6 +61,9 @@ public class GameScene extends HUDScene
         // don't follow player anymore
     	activity.getCamera().setChaseEntity(null);
 
+    	// no more bounds
+		activity.getCamera().setBoundsEnabled(false);
+
     	// reset camera position
         activity.getCamera().setCenter(activity.getCAMERA_WIDTH() / 2,
         		activity.getCAMERA_HEIGHT() / 2);
