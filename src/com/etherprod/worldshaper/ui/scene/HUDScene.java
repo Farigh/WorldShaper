@@ -4,11 +4,16 @@ import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl.IAnalogOnScreenControlListener;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
+import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.HorizontalAlign;
 
@@ -16,17 +21,19 @@ import android.opengl.GLES20;
 
 public abstract class HUDScene extends MyScene
 {
-	private BitmapTextureAtlas	mOnScreenControlTexture;
-	private ITextureRegion		mOnScreenControlBaseTextureRegion;
-	private ITextureRegion		mOnScreenControlKnobTextureRegion;
-	private HUD 				gameHUD;
-	private Text 				scoreText;
+	private BitmapTextureAtlas			mOnScreenControlTexture;
+	private BuildableBitmapTextureAtlas	buttonTextureAtlas;
+	private ITextureRegion				mOnScreenControlBaseTextureRegion;
+	private ITextureRegion				mOnScreenControlKnobTextureRegion;
+	private HUD 						gameHUD;
+	private Text 						scoreText;
+	private ITextureRegion				jump_texture;
 	
 	@Override
     public void createScene()
     {
-		createHUD();
 		onCreateResources();
+		createHUD();
 
 		/* Velocity control (left). */
 		final float y = activity.getCAMERA_HEIGHT()
@@ -57,7 +64,7 @@ public abstract class HUDScene extends MyScene
 
 		gameHUD.setChildScene(velocityOnScreenControl);
 
-		/* Rotation control (right). */
+		/* Rotation control (right). *//*
 		final float x = activity.getCAMERA_WIDTH()
 				- this.mOnScreenControlBaseTextureRegion.getWidth();
 		final AnalogOnScreenControl rotationOnScreenControl = new AnalogOnScreenControl(
@@ -84,7 +91,7 @@ public abstract class HUDScene extends MyScene
 				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		rotationOnScreenControl.getControlBase().setAlpha(0.5f);
 
-		velocityOnScreenControl.setChildScene(rotationOnScreenControl);
+		velocityOnScreenControl.setChildScene(rotationOnScreenControl);*/
     }
 
 	private void onCreateResources()
@@ -99,6 +106,23 @@ public abstract class HUDScene extends MyScene
 				.createFromAsset(this.mOnScreenControlTexture, activity,
 						"onscreen_control_knob.png", 128, 0);
 		this.mOnScreenControlTexture.load();
+
+	    buttonTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
+	    		1024, TextureOptions.BILINEAR);
+	    
+	    jump_texture = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(buttonTextureAtlas, activity, "jump_button.png");
+
+	    try
+		{
+			buttonTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
+	        		BitmapTextureAtlas>(0, 1, 0));
+		    buttonTextureAtlas.load();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void createHUD()
@@ -114,6 +138,28 @@ public abstract class HUDScene extends MyScene
 	    gameHUD.attachChild(scoreText);
 
 	    activity.getCamera().setHUD(gameHUD);
+	    
+	    // adding jump button
+	    final float x = activity.getCAMERA_WIDTH() - jump_texture.getWidth() - 100;
+	    final float y = activity.getCAMERA_HEIGHT() - jump_texture.getHeight() - 50;
+	    
+	    final Sprite jump_button = new Sprite(x, y, jump_texture, 
+	    		activity.getVertexBufferObjectManager())
+	    {
+	        public boolean onAreaTouched(TouchEvent touchEvent, float X, float Y)
+	        {
+	            if (touchEvent.isActionUp())
+	            {
+	            	onJumpButtonClick();
+	            }
+	            return true;
+	        };
+	    };
+	    
+	    jump_button.setScale(2.0f);
+	    
+	    gameHUD.registerTouchArea(jump_button);
+	    gameHUD.attachChild(jump_button);
 	}
 
 	@Override
@@ -140,4 +186,6 @@ public abstract class HUDScene extends MyScene
 	
 	protected abstract void onRightControlClick(
 			final AnalogOnScreenControl pAnalogOnScreenControl);
+	
+	protected abstract void onJumpButtonClick();
 }

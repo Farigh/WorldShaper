@@ -29,7 +29,8 @@ public class Player extends GameObject
 	 * 
 	 * @return The palyer's body
 	 */
-	public Body getBody() {
+	public Body getBody() 
+	{
 		return body;
 	}
 
@@ -91,7 +92,7 @@ public class Player extends GameObject
 
 	public void jump()
 	{
-	    body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, 12)); 
+	    body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -8)); 
 	}
 
 	public void onDie()

@@ -109,6 +109,12 @@ public class GameScene extends HUDScene
 	}
 
 	@Override
+	protected void onJumpButtonClick()
+	{
+		player.jump();
+	}
+
+	@Override
 	protected void onRightControlClick(
 			AnalogOnScreenControl pAnalogOnScreenControl)
 	{
