@@ -13,7 +13,7 @@ import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
-import com.etherprod.worldshaper.util.map.MapData;
+import com.etherprod.worldshaper.util.data.MapData;
 import com.etherprod.worldshaper.util.map.MapXMLParser;
 
 /**
@@ -23,8 +23,8 @@ import com.etherprod.worldshaper.util.map.MapXMLParser;
  */
 public class Map
 {
-	private final static int TILE_SIZE = 32;
-	private static ArrayList<Sprite> _Tiles	= new ArrayList<Sprite>();
+	private final static int			TILE_SIZE = 32;
+	private static ArrayList<Sprite>	_Tiles = new ArrayList<Sprite>();
 
 	/**
 	 * This function returns the map's objects list (tiles)
@@ -48,7 +48,7 @@ public class Map
 	{
 		MapXMLParser parser = new MapXMLParser(scene, activity.getVertexBufferObjectManager(), physicsWorld);
 		
-		MapData mapData = parser.createMapFromFile(activity.getAssets(), "levels/level_test.xml");
+		MapData mapData = parser.createMapFromFile(activity, "levels/level_test.xml");
 
 		// set camera bounds
 		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y, mapData.getMapSize().x); 

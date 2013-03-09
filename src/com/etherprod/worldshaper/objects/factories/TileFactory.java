@@ -32,7 +32,7 @@ public class TileFactory
 	// Game Texture
 	public static BuildableBitmapTextureAtlas	gameTextureAtlas;
 	private static int last_tile_index = 0;
-    
+
 	// Game Texture Regions
 	public static ArrayList<ITextureRegion>	textureRegionList = new ArrayList<ITextureRegion>();
 
@@ -43,7 +43,8 @@ public class TileFactory
 		DIRT("dirt.png"),
 		COPPER("copper.png"),
 		ROCK("rock.png"),
-		COIN("coin.png"), 
+		COIN("coin.png"),
+		EMPTY(""),
 		BOUNDS("");
 
 		private final int value;
@@ -67,35 +68,35 @@ public class TileFactory
 		}
 	}
 	
-    /**
-     * This function MUST be used at the beginning of game loading.
-     * It will be called by the @ResourcesManager.
-     * 
-     * @param mainActivity The main activity of the game
-     */
+	/**
+	 * This function MUST be used at the beginning of game loading.
+	 * It will be called by the @ResourcesManager.
+	 * 
+	 * @param mainActivity The main activity of the game
+	 */
 	public static void createResources(MainActivity activity)
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/tiles/");
-	    gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
-	    		1024, TextureOptions.BILINEAR);
+		gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
+				1024, TextureOptions.BILINEAR);
 
-	    for (TileType tileType : TileType.values())
-	    {
-	    	if (tileType != TileType.BOUNDS)
-	    		textureRegionList.add(BitmapTextureAtlasTextureRegionFactory
-	    				.createFromAsset(gameTextureAtlas, activity, tileType.getTextureFile()));
-	    }
+		for (TileType tileType : TileType.values())
+		{
+			if (tileType.getTextureFile() != "")
+				textureRegionList.add(BitmapTextureAtlasTextureRegionFactory
+						.createFromAsset(gameTextureAtlas, activity, tileType.getTextureFile()));
+		}
 
-	    try 
-	    {
-	        gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
-	        		BitmapTextureAtlas>(0, 1, 0));
-	        gameTextureAtlas.load();
-	    } 
-	    catch (final TextureAtlasBuilderException e)
-	    {
-	        Debug.e(e);
-	    }
+		try 
+		{
+			gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource,
+					BitmapTextureAtlas>(0, 1, 0));
+			gameTextureAtlas.load();
+		}
+		catch (final TextureAtlasBuilderException e)
+		{
+			Debug.e(e);
+		}
 	}
 	
 	/**
