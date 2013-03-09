@@ -19,9 +19,13 @@ import com.etherprod.worldshaper.MainActivity;
  */
 public class Player extends GameObject
 {	
-	private Body body;
-	private boolean walking = false;
-	private MainActivity activity;
+	private Body			body;
+	private boolean			walking = false;
+	private MainActivity	activity;
+	private int 			jump_count = 0;
+	private int				max_jump = 1;
+	private float			highestHeight;
+	private float			lastHeight;
 
 	/**
 	 * Gets the player's body. This is the element attached to the spite
@@ -53,7 +57,30 @@ public class Player extends GameObject
         body = PhysicsFactory.createCircleBody(physicsWorld, this,
         		BodyType.DynamicBody, PLAYER_FIX);
 
-        physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false));
+        physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false)
+        {
+            @Override
+            public void onUpdate(float pSecondsElapsed)
+            {
+                super.onUpdate(pSecondsElapsed);
+                activity.getCamera().onUpdate(0.05f);
+                float height = this.getBody().getPosition().y;
+                
+            	if (lastHeight == height)
+            	{
+            		//TODO: falling damages
+            		highestHeight = height;
+            		resetJump();
+            	}
+            	else
+            	{
+                	lastHeight = height;
+            	}
+            	
+            	if (lastHeight > highestHeight)
+            		highestHeight = lastHeight;
+            }
+        });
 
         // camera will follow the player
         activity.getCamera().setChaseEntity(this);
@@ -92,7 +119,17 @@ public class Player extends GameObject
 
 	public void jump()
 	{
-	    body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -8)); 
+		if (jump_count < max_jump)
+		{
+			highestHeight = lastHeight;
+			jump_count++;
+			body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -8));
+		}
+	}
+	
+	public void resetJump()
+	{
+		jump_count = 0;
 	}
 
 	public void onDie()

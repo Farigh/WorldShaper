@@ -120,8 +120,8 @@ public class GameScene extends HUDScene
 	{
 		/* Nothing. */
 	}
-    
-    public static Player getPlayer()
+
+	public static Player getPlayer()
     {
     	return player;
     }

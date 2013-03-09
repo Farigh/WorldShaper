@@ -117,7 +117,7 @@ public class TileFactory
 		
 		// set physics to not affect them
 		PhysicsFactory.createBoxBody(physicsWorld, tile, BodyType.StaticBody, TILE_FIX);
-
+		
 		scene.attachChild(tile);
 
 		return tile;
