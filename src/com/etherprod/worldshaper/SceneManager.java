@@ -25,7 +25,7 @@ public class SceneManager
     private MyScene splashScene;
     private MainMenuScene menuScene;
     private MyScene loadingScene;
-    private MyScene gameScene;
+    private GameScene gameScene;
 
     private MyScene currentScene;
 
@@ -161,4 +161,9 @@ public class SceneManager
     {
         return currentScene;
     }
+
+	public void setLife(int life, int maxlife)
+	{
+		gameScene.setLife(life, maxlife);
+	}
 }

@@ -26,7 +26,8 @@ public abstract class HUDScene extends MyScene
 	private ITextureRegion				mOnScreenControlBaseTextureRegion;
 	private ITextureRegion				mOnScreenControlKnobTextureRegion;
 	private HUD 						gameHUD;
-	private Text 						scoreText;
+	private Text 						lifeText;
+
 	private ITextureRegion				jump_texture;
 	
 	@Override
@@ -130,12 +131,12 @@ public abstract class HUDScene extends MyScene
 	    gameHUD = new HUD();
 
 	    // adding life text
-	    scoreText = new Text(0, 0, resourcesManager.getFont(), "Life : 9999/9999", 
+	    lifeText = new Text(0, 0, resourcesManager.getFont(), "Life : 9999/9999", 
 	    		new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
-	    scoreText.setSkewCenter(0, 0);    
-	    scoreText.setText("Life: 50/50");
-	    scoreText.setScale(0.6f);
-	    gameHUD.attachChild(scoreText);
+	    lifeText.setSkewCenter(0, 0);    
+	    lifeText.setText("Life: 50/50");
+	    lifeText.setScale(0.6f);
+	    gameHUD.attachChild(lifeText);
 
 	    activity.getCamera().setHUD(gameHUD);
 	    
@@ -167,6 +168,12 @@ public abstract class HUDScene extends MyScene
 	{
 		// remove HUD on scene leave
 	    activity.getCamera().setHUD(null);
+	}
+	
+
+	public void setLife(int life, int max)
+	{
+		lifeText.setText("Life: " + Integer.toString(life) + "/" + Integer.toString(max));
 	}
 	
     //=====================================

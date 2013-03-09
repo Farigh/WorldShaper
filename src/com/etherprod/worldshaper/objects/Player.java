@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.etherprod.worldshaper.MainActivity;
+import com.etherprod.worldshaper.SceneManager;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -20,12 +21,15 @@ import com.etherprod.worldshaper.MainActivity;
 public class Player extends GameObject
 {	
 	private Body			body;
-	private boolean			walking = false;
 	private MainActivity	activity;
-	private int 			jump_count = 0;
-	private int				max_jump = 1;
 	private float			highestHeight;
 	private float			lastHeight;
+	private boolean			walking 		= false;
+	private int 			jump_count 		= 0;
+	private int				max_jump 		= 1;
+	private int 			defense 		= 0;
+	private int				maxlife			= 50;
+	private int				life			= 50;
 
 	/**
 	 * Gets the player's body. This is the element attached to the spite
@@ -56,6 +60,9 @@ public class Player extends GameObject
         final FixtureDef PLAYER_FIX = PhysicsFactory.createFixtureDef(10.0f, 0.0f, 0.0f);
         body = PhysicsFactory.createCircleBody(physicsWorld, this,
         		BodyType.DynamicBody, PLAYER_FIX);
+        
+        highestHeight = body.getPosition().y;
+        lastHeight = highestHeight;
 
         physicsWorld.registerPhysicsConnector(new PhysicsConnector(this, body, true, false)
         {
@@ -63,12 +70,18 @@ public class Player extends GameObject
             public void onUpdate(float pSecondsElapsed)
             {
                 super.onUpdate(pSecondsElapsed);
-                activity.getCamera().onUpdate(0.05f);
+                activity.getCamera().onUpdate(0.1f);
                 float height = this.getBody().getPosition().y;
-                
+
             	if (lastHeight == height)
             	{
-            		//TODO: falling damages
+                	if (lastHeight - highestHeight > 9)
+                	{
+                		// minimum 1 damage
+            			modifyLife((int) Math.max(1, 10 * (lastHeight - highestHeight - 9) 
+            					- (defense / 2)));
+            		}
+
             		highestHeight = height;
             		resetJump();
             	}
@@ -77,7 +90,7 @@ public class Player extends GameObject
                 	lastHeight = height;
             	}
             	
-            	if (lastHeight > highestHeight)
+            	if (lastHeight < highestHeight)
             		highestHeight = lastHeight;
             }
         });
@@ -126,7 +139,12 @@ public class Player extends GameObject
 			body.setLinearVelocity(new Vector2(body.getLinearVelocity().x, -8));
 		}
 	}
-	
+
+	protected void modifyLife(int modifier)
+	{
+		SceneManager.getInstance().setLife(life - modifier ,maxlife);
+	}
+
 	public void resetJump()
 	{
 		jump_count = 0;
