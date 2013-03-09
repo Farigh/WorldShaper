@@ -59,31 +59,35 @@ public class Map
 			mapData = parser.createMapFromFile(activity, "levels/level_test.xml");
 
 		createMapFromData(scene, activity.getVertexBufferObjectManager(), physicsWorld, mapData);
-		
+
 		// set camera bounds
-		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y, mapData.getMapSize().x); 
+		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y * TILE_SIZE,
+				mapData.getMapSize().x * TILE_SIZE); 
 		activity.getCamera().setBoundsEnabled(true);
-		
+
 		// top
-		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i, -TILE_SIZE);
+		for (int i = 0; i <= mapData.getMapSize().y; i++)
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE,
+					-TILE_SIZE);
 
 		// ground
-		for (int i = 0; i < mapData.getMapSize().y; i += TILE_SIZE)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i, 
-					mapData.getMapSize().x);
+		for (int i = 0; i <= mapData.getMapSize().y; i++)
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE, 
+					mapData.getMapSize().x * TILE_SIZE);
 
 		// left
-		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, -TILE_SIZE, i);
+		for (int i = 0; i <= mapData.getMapSize().x; i++)
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, -TILE_SIZE, 
+					i * TILE_SIZE);
 
 		// right
-		for (int i = 0; i < mapData.getMapSize().x; i += TILE_SIZE)
+		for (int i = 0; i <= mapData.getMapSize().x; i++)
 			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, 
-					mapData.getMapSize().y, i);
+					mapData.getMapSize().y * TILE_SIZE, i * TILE_SIZE);
 
-		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, mapData.getMapSpawn().x,
-				 mapData.getMapSpawn().y);
+		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, 
+				 mapData.getMapSpawn().x * TILE_SIZE,
+				 mapData.getMapSpawn().y * TILE_SIZE);
 	}
 
 	private static void createMapFromData(Scene scene,
@@ -97,8 +101,8 @@ public class Map
 			for (EntityData data : list)
 			{
 				if (data.getType() == EntityType.TILE)
-					Map.addTile(scene, vertexBufferObjectManager, physicsWorld, i, j,
-							TileType.valueOf(data.getTileType()));
+					Map.addTile(scene, vertexBufferObjectManager, physicsWorld, i * TILE_SIZE,
+							j * TILE_SIZE, TileType.valueOf(data.getTileType()));
 
 				j++;
 			}

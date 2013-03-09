@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level width="1000" height="780">
-    <spawn  x="150" y="340"/>
-    <entity x="132" y="370" type="DIRT"/>
-    <entity x="164" y="370" type="DIRT"/>
-    <entity x="196" y="370" type="DIRT"/>
-    <entity x="218" y="280" type="DIRT"/>
-    <entity x="250" y="280" type="DIRT"/>
-    <entity x="282" y="280" type="DIRT"/>
-    <entity x="368" y="280" type="ROCK"/>
-    <entity x="400" y="280" type="ROCK"/>
-    <entity x="432" y="280" type="ROCK"/>
-    <entity x="518" y="160" type="COPPER"/>
-    <entity x="550" y="160" type="COPPER"/>
-    <entity x="582" y="160" type="COPPER"/>
-    <entity x="652" y="230" type="ROCK"/>
-    <entity x="684" y="230" type="ROCK"/>
-    <entity x="716" y="230" type="ROCK"/>
-    <entity x="400" y="200" type="COIN"/>
-    <entity x="500" y="70" type="COIN"/>
-    <entity x="600" y="70" type="COIN"/>
+<level width="32" height="24">
+    <spawn  x="4" y="10"/>
+    <entity x="4" y="11" type="DIRT"/>
+    <entity x="5" y="11" type="DIRT"/>
+    <entity x="6" y="11" type="DIRT"/>
+    <entity x="6" y="8" type="DIRT"/>
+    <entity x="7" y="8" type="DIRT"/>
+    <entity x="8" y="8" type="DIRT"/>
+    <entity x="11" y="8" type="ROCK"/>
+    <entity x="12" y="8" type="ROCK"/>
+    <entity x="13" y="8" type="ROCK"/>
+    <entity x="16" y="5" type="COPPER"/>
+    <entity x="17" y="5" type="COPPER"/>
+    <entity x="18" y="5" type="COPPER"/>
+    <entity x="20" y="7" type="ROCK"/>
+    <entity x="21" y="7" type="ROCK"/>
+    <entity x="22" y="7" type="ROCK"/>
+    <entity x="12" y="6" type="COIN"/>
+    <entity x="16" y="3" type="COIN"/>
+    <entity x="18" y="3" type="COIN"/>
 </level>
