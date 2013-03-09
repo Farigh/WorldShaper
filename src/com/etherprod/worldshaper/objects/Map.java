@@ -13,6 +13,9 @@ import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
+import com.etherprod.worldshaper.util.data.DataManager;
+import com.etherprod.worldshaper.util.data.EntityData;
+import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.data.MapData;
 import com.etherprod.worldshaper.util.map.MapXMLParser;
 
@@ -46,10 +49,17 @@ public class Map
 	public static Player mapCreate(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld) 
 	{
-		MapXMLParser parser = new MapXMLParser(scene, activity.getVertexBufferObjectManager(), physicsWorld);
-		
-		MapData mapData = parser.createMapFromFile(activity, "levels/level_test.xml");
+		MapXMLParser parser = new MapXMLParser();
+		MapData mapData;
 
+		// load map if exists
+		if (activity.getFileStreamPath("map.dat").exists())
+			mapData = DataManager.loadMap(activity);
+		else
+			mapData = parser.createMapFromFile(activity, "levels/level_test.xml");
+
+		createMapFromData(scene, activity.getVertexBufferObjectManager(), physicsWorld, mapData);
+		
 		// set camera bounds
 		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y, mapData.getMapSize().x); 
 		activity.getCamera().setBoundsEnabled(true);
@@ -74,6 +84,26 @@ public class Map
 
 		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, mapData.getMapSpawn().x,
 				 mapData.getMapSpawn().y);
+	}
+
+	private static void createMapFromData(Scene scene,
+			VertexBufferObjectManager vertexBufferObjectManager,
+			PhysicsWorld physicsWorld, MapData mapData)
+	{
+		int i = 1;
+		for (ArrayList<EntityData> list : mapData.getMap())
+		{
+			int j = 1;
+			for (EntityData data : list)
+			{
+				if (data.getType() == EntityType.TILE)
+					Map.addTile(scene, vertexBufferObjectManager, physicsWorld, i, j,
+							TileType.valueOf(data.getTileType()));
+
+				j++;
+			}
+			i++;
+		}
 	}
 
 	public static void addTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,

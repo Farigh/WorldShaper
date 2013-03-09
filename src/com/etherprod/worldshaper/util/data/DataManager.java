@@ -19,7 +19,6 @@ import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
 
 import com.etherprod.worldshaper.MainActivity;
-import com.etherprod.worldshaper.objects.Map;
 
 public class DataManager
 {
@@ -50,9 +49,9 @@ public class DataManager
 		}
 	}
 	
-	public static Map loadMap(MainActivity activity)
+	public static MapData loadMap(MainActivity activity)
 	{
-		Map map = null;
+		MapData map = null;
 
 		try
 		{
@@ -64,7 +63,7 @@ public class DataManager
 
 			try
 			{
-				map = (Map) input.readObject();
+				map = (MapData) input.readObject();
 			}
 			finally
 			{

@@ -20,6 +20,16 @@ public class EntityData implements Serializable
 		this.type = type;
 	}
 
+	public EntityType getType()
+	{
+		return type;
+	}
+
+	public String getTileType()
+	{
+		return tileType;
+	}
+
 	public void setTileType(String type)
 	{
 		this.tileType = type;

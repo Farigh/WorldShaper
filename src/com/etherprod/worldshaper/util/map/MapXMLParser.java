@@ -5,16 +5,11 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.andengine.entity.scene.Scene;
-import org.andengine.extension.physics.box2d.PhysicsWorld;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.etherprod.worldshaper.MainActivity;
-import com.etherprod.worldshaper.objects.Map;
-import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
 import com.etherprod.worldshaper.util.data.DataManager;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.MapData;
@@ -25,19 +20,6 @@ public class MapXMLParser extends DefaultHandler
 	//private String	tmpVal;
 	private MapData		mapData;
 	private MapEntity	tmpEntity;
-
-	private Scene scene;
-	private VertexBufferObjectManager vertexBufferObjectManager;
-	private PhysicsWorld physicsWorld;
-
-	public MapXMLParser(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
-			PhysicsWorld physicsWorld)
-	{
-		super();
-		this.scene = scene;
-		this.vertexBufferObjectManager = vertexBufferObjectManager;
-		this.physicsWorld = physicsWorld;
-	}
 
 	public MapData createMapFromFile(MainActivity activity, String file)
 	{
@@ -97,10 +79,8 @@ public class MapXMLParser extends DefaultHandler
 	{
 		if(qName.equalsIgnoreCase("entity"))
 		{
-			Map.addTile(scene, vertexBufferObjectManager, physicsWorld, tmpEntity.getX(),
-					tmpEntity.getY(), TileType.valueOf(tmpEntity.getType()));
 			EntityData entity = mapData.addEntity(EntityType.TILE,
-					tmpEntity.getX(), tmpEntity.getY());
+					tmpEntity.getX() - 1, tmpEntity.getY() - 1);
 			entity.setTileType(tmpEntity.getType());
 		}
 	}

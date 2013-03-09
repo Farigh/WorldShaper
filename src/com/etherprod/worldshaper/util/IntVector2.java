@@ -1,7 +1,10 @@
 package com.etherprod.worldshaper.util;
 
-public class IntVector2
+import java.io.Serializable;
+
+public class IntVector2 implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	public int x, y;
 
 	public IntVector2(int x, int y)

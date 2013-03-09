@@ -2,7 +2,6 @@ package com.etherprod.worldshaper.util.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.etherprod.worldshaper.util.IntVector2;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
@@ -28,16 +27,27 @@ public class MapData implements Serializable
 		map_size.x = height;
 		map_size.y = width;
 
+		map = new ArrayList<ArrayList<EntityData>>();
+
 		// Initialize with empty tiles
-		map = new ArrayList<ArrayList<EntityData>>(Collections.nCopies(height,
-				new ArrayList<EntityData>(Collections.nCopies(width, empty))));
+		for (int i = 0; i < height; i++)
+		{
+			ArrayList<EntityData> list = new ArrayList<EntityData>();
+			
+			for (int j = 0; j < width; j++)
+				list.add(empty);
+			
+			map.add(list);
+		}
 	}
 
 	public EntityData addEntity(EntityType type, int x, int y)
 	{
 		EntityData data = new EntityData(type);
 		
-		map.get(x).set(y, data);
+		ArrayList<EntityData> list = map.get(x);
+		
+		list.set(y, data);
 		
 		return data;
 	}
@@ -56,5 +66,10 @@ public class MapData implements Serializable
 	public IntVector2 getMapSpawn()
 	{
 		return map_spawn;
+	}
+
+	public ArrayList<ArrayList<EntityData>> getMap()
+	{
+		return map;
 	}
 }
