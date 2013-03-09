@@ -164,6 +164,6 @@ public class SceneManager
 
 	public void setLife(int life, int maxlife)
 	{
-		gameScene.setLife(life, maxlife);
+		gameScene.setLife((life < 0) ? 0 : life, maxlife);
 	}
 }
