@@ -15,26 +15,26 @@ public class MapGenerator
 	private static final float DEFAULT_DIRT_LIMIT = 0.2f;
 	private static final float MIN_DIRT_LIMIT = 0.25f; // dirt can't start under it
 	private static final float DEFAULT_ROCK_LIMIT = 0.5f;
-	
+
 	private static MapData	mapData;
 	private static Random 	randomizer = new Random();
 	private static int 		dirtStart;
 	private static int 		rockStart;
-	
+
 	private enum WorldSettings
 	{
 		HOME(400,1000);
-		
+
 		private int height; public int getHeight() { return height; }
 		private int width;  public int getWidth() { return width; }
-		
+
 		private WorldSettings(int height, int width)
 		{
 			this.height = height;
 			this.width = width;
 		}
 	}
-	
+
 	public static MapData generateHome()
 	{
 		mapData = new MapData();
@@ -42,17 +42,17 @@ public class MapGenerator
 
 		dirtStart = (int) (WorldSettings.HOME.getHeight() * 0.2); // not that much sky for home
 		rockStart = (int) (WorldSettings.HOME.getHeight() * 0.5); // not that much sky for home
-		
+
 		generateWorld(WorldSettings.HOME);
-		
+
 		return mapData;
 	}
-	
+
 	private static void generateWorld(WorldSettings settings)
 	{ 
 		int height = settings.getHeight();
 		int width = settings.getWidth();
-		
+
 		// randomly increase/decrease layout start a little
 		dirtStart += ((double) height * 0.001f * (double) randomizer.nextInt(30));
 		rockStart += ((double) height * 0.005f * (double) randomizer.nextInt(30));
@@ -63,7 +63,7 @@ public class MapGenerator
 			//TODO: display this to loadscreen
 			String progresstext = "Terraforming in progress : " + (int)(progress * 100f) + "%";
 			Debug.e(progresstext);
-			
+
 			for (int j = dirtStart; j < height; j++)
 			{
 				EntityData entity = mapData.addEntity(EntityType.TILE, j, i);
@@ -74,6 +74,7 @@ public class MapGenerator
 					entity.setTileType(TileType.ROCK.toString());
 			}
 		}
+
 		// set spawn point
 		mapData.setMapSpawn(dirtStart - 1, width / 2);
 	}

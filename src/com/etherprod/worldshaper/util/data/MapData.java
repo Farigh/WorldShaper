@@ -35,12 +35,12 @@ public class MapData implements Serializable
 			float progress = (float)i / (float) width;
 			//TODO: display this to loadscreen
 			String progresstext = "Big bang in progress : " + (int)(progress * 100f) + "%";
-			
+
 			ArrayList<EntityData> list = new ArrayList<EntityData>();
-			
+
 			for (int j = 0; j < width; j++)
 				list.add(empty);
-			
+
 			map.add(list);
 		}
 	}
@@ -48,11 +48,11 @@ public class MapData implements Serializable
 	public EntityData addEntity(EntityType type, int x, int y)
 	{
 		EntityData data = new EntityData(type);
-		
+
 		ArrayList<EntityData> list = map.get(x);
-		
+
 		list.set(y, data);
-		
+
 		return data;
 	}
 

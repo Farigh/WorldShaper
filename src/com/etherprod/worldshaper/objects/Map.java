@@ -27,7 +27,7 @@ import com.etherprod.worldshaper.util.map.MapGenerator;
  */
 public class Map
 {
-	private final static int			TILE_SIZE = 32;
+	private final static int			TILE_SIZE = 31; // tile size - 1 to avoid spaces
 	private static ArrayList<Sprite>	_Tiles = new ArrayList<Sprite>();
 
 	/**
@@ -103,7 +103,7 @@ public class Map
 			 i < maxHeight; i++)
 		{
 			ArrayList<EntityData> list = mapData.getMap().get(i);
-			
+
 			int maxWidth = mapData.getMapSpawn().y + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
 			for (int j = mapData.getMapSpawn().y - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
 				 j < maxWidth; j++)
@@ -126,7 +126,7 @@ public class Map
 		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
 				tileType));
 	}
-	
+
 	public static void addBound(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y)
 	{
