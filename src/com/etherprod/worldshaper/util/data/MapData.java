@@ -1,8 +1,8 @@
 package com.etherprod.worldshaper.util.data;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+
+import org.andengine.util.debug.Debug;
 
 import com.etherprod.worldshaper.util.IntVector2;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
@@ -27,7 +27,9 @@ public class MapData implements Serializable
 		map_size.x = height;
 		map_size.y = width;
 
+		//TODO: display this to loadscreen
 		String progresstext = "Big bang in progress ...";
+		Debug.e("Setting size to " + width + "," + height);
 		map = new EntityData[width][height];
 	}
 
@@ -44,6 +46,7 @@ public class MapData implements Serializable
 	{
 		map_spawn.x = x;
 		map_spawn.y = y;
+		Debug.e("Setting spawn to " + x + "," + y);
 	}
 
 	public IntVector2 getMapSize()

@@ -7,15 +7,14 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.debug.Debug;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
-import com.etherprod.worldshaper.util.data.DataManager;
 import com.etherprod.worldshaper.util.data.EntityData;
+import com.etherprod.worldshaper.util.data.MapXMLManager;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.data.MapData;
 import com.etherprod.worldshaper.util.map.MapGenerator;
@@ -53,13 +52,13 @@ public class Map
 		MapData mapData;
 
 		// load map if exists
-		/*if (activity.getFileStreamPath("map.dat").exists())
-			mapData = DataManager.loadMap(activity);
+		if (activity.getFileStreamPath("mp.dat").exists())
+			mapData = MapXMLManager.loadMapFromFile(activity, "map.dat");
 		else
-		{*/
+		{
 			mapData = MapGenerator.generateHome();
-			DataManager.saveMap(activity, mapData);
-		//}
+			MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
+		}
 
 		createMapFromData(scene, activity, physicsWorld, mapData);
 
@@ -89,8 +88,8 @@ public class Map
 					mapData.getMapSize().y * TILE_SIZE, i * TILE_SIZE);
 
 		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, 
-				 mapData.getMapSpawn().y * TILE_SIZE,
-				 mapData.getMapSpawn().x * TILE_SIZE);
+				 mapData.getMapSpawn().x * TILE_SIZE,
+				 mapData.getMapSpawn().y * TILE_SIZE);
 	}
 
 	private static void createMapFromData(Scene scene, MainActivity activity,
@@ -99,18 +98,17 @@ public class Map
 		EntityData[][] map = mapData.getMap();
 		
 		// only load on screen tiles
-		int maxWidth = mapData.getMapSpawn().y + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
-		for (int i = mapData.getMapSpawn().y - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
+		int maxWidth = mapData.getMapSpawn().x + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
+		for (int i = mapData.getMapSpawn().x - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
 			 i < maxWidth; i++)
 		{
-			int maxHeight = mapData.getMapSpawn().x + ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) + 2;
-			for (int j = mapData.getMapSpawn().x - ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2 - 1);
+			int maxHeight = mapData.getMapSpawn().y + ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) + 2;
+			for (int j = mapData.getMapSpawn().y - ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2 - 1);
 				 j < maxHeight; j++)
 			{
 				EntityData data = map[i][j];
 				if ((data != null) && (data.getType() == EntityType.TILE))
 				{
-					Debug.e("Spawning tile at " + j + "," + i);
 					Map.addTile(scene, activity.getVertexBufferObjectManager(), 
 							physicsWorld, i * TILE_SIZE, j * TILE_SIZE, 
 							TileType.valueOf(data.getTileType()));

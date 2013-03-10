@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level width="40" height="30">
+    <spawn x="19" y="13" />
+    <entity x="19" y="14" type="DIRT" />
+    <entity x="20" y="14" type="DIRT" />
+    <entity x="21" y="14" type="DIRT" />
+    <entity x="21" y="11" type="DIRT" />
+    <entity x="22" y="11" type="DIRT" />
+    <entity x="23" y="11" type="DIRT" />
+    <entity x="26" y="11" type="ROCK" />
+    <entity x="27" y="11" type="ROCK" />
+    <entity x="28" y="11" type="ROCK" />
+    <entity x="31" y="8" type="COPPER" />
+    <entity x="32" y="8" type="COPPER" />
+    <entity x="33" y="8" type="COPPER" />
+    <entity x="35" y="10" type="ROCK" />
+    <entity x="36" y="10" type="ROCK" />
+    <entity x="37" y="10" type="ROCK" />
+    <entity x="27" y="9" type="COIN" />
+    <entity x="31" y="6" type="COIN" />
+    <entity x="33" y="6" type="COIN" />
+</level>

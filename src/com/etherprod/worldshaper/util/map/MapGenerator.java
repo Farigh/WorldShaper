@@ -21,7 +21,7 @@ public class MapGenerator
 
 	private enum WorldSettings
 	{
-		HOME(400,1000);
+		HOME(400,800);
 
 		private int height; public int getHeight() { return height; }
 		private int width;  public int getWidth() { return width; }
@@ -73,6 +73,6 @@ public class MapGenerator
 		}
 
 		// set spawn point
-		mapData.setMapSpawn(dirtStart - 1, width / 2);
+		mapData.setMapSpawn(width / 2, dirtStart - 1);
 	}
 }
