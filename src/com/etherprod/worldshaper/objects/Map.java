@@ -17,7 +17,7 @@ import com.etherprod.worldshaper.util.data.DataManager;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.data.MapData;
-import com.etherprod.worldshaper.util.map.MapXMLParser;
+import com.etherprod.worldshaper.util.map.MapGenerator;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -49,14 +49,16 @@ public class Map
 	public static Player mapCreate(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld) 
 	{
-		MapXMLParser parser = new MapXMLParser();
 		MapData mapData;
 
 		// load map if exists
-		if (activity.getFileStreamPath("map.dat").exists())
+		if (activity.getFileStreamPath("mp.dat").exists())
 			mapData = DataManager.loadMap(activity);
 		else
-			mapData = parser.createMapFromFile(activity, "levels/level_test.xml");
+		{
+			mapData = MapGenerator.generateHome();
+			DataManager.saveMap(activity, mapData);
+		}
 
 		createMapFromData(scene, activity.getVertexBufferObjectManager(), physicsWorld, mapData);
 

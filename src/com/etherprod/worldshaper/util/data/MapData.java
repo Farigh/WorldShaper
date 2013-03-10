@@ -32,6 +32,10 @@ public class MapData implements Serializable
 		// Initialize with empty tiles
 		for (int i = 0; i < height; i++)
 		{
+			float progress = (float)i / (float) width;
+			//TODO: display this to loadscreen
+			String progresstext = "Big bang in progress : " + (int)(progress * 100f) + "%";
+			
 			ArrayList<EntityData> list = new ArrayList<EntityData>();
 			
 			for (int j = 0; j < width; j++)
