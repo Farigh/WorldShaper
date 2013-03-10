@@ -53,13 +53,13 @@ public class Map
 		MapData mapData;
 
 		// load map if exists
-		if (activity.getFileStreamPath("mp.dat").exists())
+		/*if (activity.getFileStreamPath("map.dat").exists())
 			mapData = DataManager.loadMap(activity);
 		else
-		{
+		{*/
 			mapData = MapGenerator.generateHome();
 			DataManager.saveMap(activity, mapData);
-		}
+		//}
 
 		createMapFromData(scene, activity, physicsWorld, mapData);
 
@@ -88,7 +88,6 @@ public class Map
 			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, 
 					mapData.getMapSize().y * TILE_SIZE, i * TILE_SIZE);
 
-		Debug.e("Spawn player at " + mapData.getMapSpawn().x + "," + mapData.getMapSpawn().y);
 		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, 
 				 mapData.getMapSpawn().y * TILE_SIZE,
 				 mapData.getMapSpawn().x * TILE_SIZE);
@@ -97,23 +96,23 @@ public class Map
 	private static void createMapFromData(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld, MapData mapData)
 	{
+		EntityData[][] map = mapData.getMap();
+		
 		// only load on screen tiles
-		int maxHeight = mapData.getMapSpawn().x + ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) + 2;
-		for (int i = mapData.getMapSpawn().x - ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2 - 1);
-			 i < maxHeight; i++)
+		int maxWidth = mapData.getMapSpawn().y + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
+		for (int i = mapData.getMapSpawn().y - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
+			 i < maxWidth; i++)
 		{
-			ArrayList<EntityData> list = mapData.getMap().get(i);
-
-			int maxWidth = mapData.getMapSpawn().y + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
-			for (int j = mapData.getMapSpawn().y - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
-				 j < maxWidth; j++)
+			int maxHeight = mapData.getMapSpawn().x + ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) + 2;
+			for (int j = mapData.getMapSpawn().x - ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2 - 1);
+				 j < maxHeight; j++)
 			{
-				EntityData data = list.get(j);
-				if (data.getType() == EntityType.TILE)
+				EntityData data = map[i][j];
+				if ((data != null) && (data.getType() == EntityType.TILE))
 				{
 					Debug.e("Spawning tile at " + j + "," + i);
 					Map.addTile(scene, activity.getVertexBufferObjectManager(), 
-							physicsWorld, j * TILE_SIZE, i * TILE_SIZE, 
+							physicsWorld, i * TILE_SIZE, j * TILE_SIZE, 
 							TileType.valueOf(data.getTileType()));
 				}
 			}

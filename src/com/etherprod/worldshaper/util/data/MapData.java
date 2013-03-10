@@ -1,6 +1,7 @@
 package com.etherprod.worldshaper.util.data;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.etherprod.worldshaper.util.IntVector2;
@@ -10,11 +11,10 @@ public class MapData implements Serializable
 {
 	private static final long					serialVersionUID = 1L;
 	public static transient final int			TILE_SIZE = 32;
-	public static transient final EntityData	empty = new EntityData(EntityType.EMPTY);
 
 	private IntVector2							map_size;
 	private IntVector2							map_spawn;
-	private ArrayList<ArrayList<EntityData>> 	map;
+	private EntityData[][]						map;
 
 	public MapData()
 	{
@@ -27,31 +27,15 @@ public class MapData implements Serializable
 		map_size.x = height;
 		map_size.y = width;
 
-		map = new ArrayList<ArrayList<EntityData>>();
-
-		// Initialize with empty tiles
-		for (int i = 0; i < height; i++)
-		{
-			float progress = (float)i / (float) width;
-			//TODO: display this to loadscreen
-			String progresstext = "Big bang in progress : " + (int)(progress * 100f) + "%";
-
-			ArrayList<EntityData> list = new ArrayList<EntityData>();
-
-			for (int j = 0; j < width; j++)
-				list.add(empty);
-
-			map.add(list);
-		}
+		String progresstext = "Big bang in progress ...";
+		map = new EntityData[width][height];
 	}
 
 	public EntityData addEntity(EntityType type, int x, int y)
 	{
 		EntityData data = new EntityData(type);
 
-		ArrayList<EntityData> list = map.get(x);
-
-		list.set(y, data);
+		map[x][y] = data;
 
 		return data;
 	}
@@ -72,7 +56,7 @@ public class MapData implements Serializable
 		return map_spawn;
 	}
 
-	public ArrayList<ArrayList<EntityData>> getMap()
+	public EntityData[][] getMap()
 	{
 		return map;
 	}

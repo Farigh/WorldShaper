@@ -2,8 +2,6 @@ package com.etherprod.worldshaper.util.map;
 
 import java.util.Random;
 
-import org.andengine.util.debug.Debug;
-
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.MapData;
@@ -62,11 +60,10 @@ public class MapGenerator
 			float progress = (float)i / (float) width;
 			//TODO: display this to loadscreen
 			String progresstext = "Terraforming in progress : " + (int)(progress * 100f) + "%";
-			Debug.e(progresstext);
 
 			for (int j = dirtStart; j < height; j++)
 			{
-				EntityData entity = mapData.addEntity(EntityType.TILE, j, i);
+				EntityData entity = mapData.addEntity(EntityType.TILE, i, j);
 
 				if (j < rockStart)
 					entity.setTileType(TileType.DIRT.toString());

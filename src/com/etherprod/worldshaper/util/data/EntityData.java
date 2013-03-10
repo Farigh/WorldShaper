@@ -10,8 +10,7 @@ public class EntityData implements Serializable
 
 	public enum EntityType
 	{
-		TILE,
-		EMPTY
+		TILE
 	}
 
 	public EntityData(EntityType type)
