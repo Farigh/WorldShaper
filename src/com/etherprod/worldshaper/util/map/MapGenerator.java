@@ -23,7 +23,7 @@ public class MapGenerator
 	
 	private enum WorldSettings
 	{
-		HOME(150,2000);
+		HOME(400,1000);
 		
 		private int height; public int getHeight() { return height; }
 		private int width;  public int getWidth() { return width; }
@@ -39,8 +39,9 @@ public class MapGenerator
 	{
 		mapData = new MapData();
 		mapData.setMapSize(WorldSettings.HOME.getHeight(), WorldSettings.HOME.getWidth());
-		
+
 		dirtStart = (int) (WorldSettings.HOME.getHeight() * 0.2); // not that much sky for home
+		rockStart = (int) (WorldSettings.HOME.getHeight() * 0.5); // not that much sky for home
 		
 		generateWorld(WorldSettings.HOME);
 		
@@ -68,7 +69,7 @@ public class MapGenerator
 				EntityData entity = mapData.addEntity(EntityType.TILE, j, i);
 
 				if (j < rockStart)
-					entity.setTileType(TileType.COPPER.toString());
+					entity.setTileType(TileType.DIRT.toString());
 				else
 					entity.setTileType(TileType.ROCK.toString());
 			}
