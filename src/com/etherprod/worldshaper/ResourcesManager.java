@@ -25,8 +25,9 @@ public class ResourcesManager
     //=====================================
     //              Resources
     //=====================================
-    
-    public Font font;
+
+    public Font font20;
+    public Font font50;
 
     /**
      * This function MUST be used at the beginning of game loading.
@@ -86,9 +87,14 @@ public class ResourcesManager
 		return activity;
 	}
 
-	public Font getFont()
+	public Font getFont50()
 	{
-		return font;
+		return font50;
+	}
+
+	public Font getFont20()
+	{
+		return font20;
 	}
 
     //=====================================
@@ -107,10 +113,16 @@ public class ResourcesManager
 	    final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
 	    		TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    
-	    font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
+	    font50 = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
 	    		activity.getAssets(), "font.ttf", 50, false, Color.WHITE_ARGB_PACKED_INT, 2,
 	    		Color.BLACK_ARGB_PACKED_INT);
 
-	    font.load();
+	    font50.load();
+	    
+	    font20 = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
+	    		activity.getAssets(), "font.ttf", 20, false, Color.WHITE_ARGB_PACKED_INT, 1,
+	    		Color.BLACK_ARGB_PACKED_INT);
+
+	    font20.load();
     }
 }

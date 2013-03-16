@@ -8,13 +8,15 @@ import org.andengine.util.color.Color;
 import com.etherprod.worldshaper.SceneManager.SceneType;
 
 public class LoadingScene extends MyScene
-{
+{	
 	@Override
 	public void createScene()
 	{
-		Font font = resourcesManager.getFont();
-	    setBackground(new Background(Color.WHITE));
-	    attachChild(new Text(40, 100, font, "Loading...", activity.getVertexBufferObjectManager()));
+		Font font50 = resourcesManager.getFont50();
+
+		setBackground(new Background(Color.WHITE));
+
+		attachChild(new Text(40, 100, font50, "Loading...", activity.getVertexBufferObjectManager())); 
 	}
 
 	@Override

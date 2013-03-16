@@ -25,7 +25,7 @@ public abstract class HUDScene extends MyScene
 	private BuildableBitmapTextureAtlas	buttonTextureAtlas;
 	private ITextureRegion				mOnScreenControlBaseTextureRegion;
 	private ITextureRegion				mOnScreenControlKnobTextureRegion;
-	private HUD 						gameHUD;
+	protected HUD 						gameHUD;
 	private Text 						lifeText;
 
 	private ITextureRegion				jump_texture;
@@ -33,6 +33,10 @@ public abstract class HUDScene extends MyScene
 	@Override
     public void createScene()
     {
+    }
+	
+	public void loadResouces()
+	{
 		onCreateResources();
 		createHUD();
 
@@ -93,7 +97,7 @@ public abstract class HUDScene extends MyScene
 		rotationOnScreenControl.getControlBase().setAlpha(0.5f);
 
 		velocityOnScreenControl.setChildScene(rotationOnScreenControl);*/
-    }
+	}
 
 	private void onCreateResources()
 	{
@@ -131,14 +135,12 @@ public abstract class HUDScene extends MyScene
 	    gameHUD = new HUD();
 
 	    // adding life text
-	    lifeText = new Text(0, 0, resourcesManager.getFont(), "Life : 9999/9999", 
+	    lifeText = new Text(0, 0, resourcesManager.getFont50(), "Life : 9999/9999", 
 	    		new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
 	    lifeText.setSkewCenter(0, 0);    
 	    lifeText.setText("Life: 50/50");
-	    lifeText.setScale(0.6f);
+	    lifeText.setScale(0.8f);
 	    gameHUD.attachChild(lifeText);
-
-	    activity.getCamera().setHUD(gameHUD);
 	    
 	    // adding jump button
 	    final float x = activity.getCAMERA_WIDTH() - jump_texture.getWidth() - 100;

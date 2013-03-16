@@ -87,9 +87,9 @@ public class Map
 			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, 
 					mapData.getMapSize().y * TILE_SIZE, i * TILE_SIZE);
 
-		 return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, 
-				 mapData.getMapSpawn().x * TILE_SIZE,
-				 mapData.getMapSpawn().y * TILE_SIZE);
+		return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, 
+				mapData.getMapSpawn().x * TILE_SIZE,
+				mapData.getMapSpawn().y * TILE_SIZE);
 	}
 
 	private static void createMapFromData(Scene scene, MainActivity activity,

@@ -13,17 +13,19 @@ import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
+import com.etherprod.worldshaper.util.loader.AsyncTaskRunner;
+import com.etherprod.worldshaper.util.loader.IAsyncTask;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
- *
+ * @brief
  * This is the game scene
  */
 public class GameScene extends HUDScene
 {
 	private static Player 	player;
 	private PhysicsWorld	physicsWorld;
-	
+
     @Override
     public void createScene()
     {
@@ -34,12 +36,9 @@ public class GameScene extends HUDScene
 		
 		//adding gravity physics
 		physicsWorld = new PhysicsWorld(new Vector2(0, SensorManager.GRAVITY_EARTH), false);
-		this.registerUpdateHandler(physicsWorld); 
-
-		// create map
-		player = Map.mapCreate(this, activity, physicsWorld);
+		this.registerUpdateHandler(physicsWorld);
     }
-
+    
     @Override
     public void onBackKeyPressed()
     {
@@ -75,7 +74,10 @@ public class GameScene extends HUDScene
 			float pValueY) 
 	{
 		Player player = GameScene.getPlayer();
-		
+
+		if (player == null)
+			return;
+
 		if (pValueX != 0 && pValueY != 0)
 			player.walk();
 		else
@@ -97,6 +99,10 @@ public class GameScene extends HUDScene
 			float pValueY) 
 	{
 		Player player = GameScene.getPlayer();
+
+		if (player == null)
+			return;
+
 		if (pValueX == 0 && pValueY == 0)
 		{
 			player.setRotation(0);
@@ -125,4 +131,29 @@ public class GameScene extends HUDScene
     {
     	return player;
     }
+
+	@Override
+	public void loadResouces()
+	{
+		super.loadResouces();
+		
+		IAsyncTask callback = new IAsyncTask(this)
+		{
+			@Override
+			public void execute()
+			{
+				// create map
+				player = Map.mapCreate(scene, activity, physicsWorld);
+			}
+
+			@Override
+			public void onTaskCompleted()
+			{
+				SceneManager.getInstance().setScene(SceneManager.SceneType.SCENE_GAME);
+			    activity.getCamera().setHUD(gameHUD);
+			}
+		};
+		
+		AsyncTaskRunner.getInstance().execute(callback);
+	}
 }
