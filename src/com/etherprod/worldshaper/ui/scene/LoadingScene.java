@@ -1,22 +1,39 @@
 package com.etherprod.worldshaper.ui.scene;
 
+import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.text.Text;
-import org.andengine.opengl.font.Font;
-import org.andengine.util.color.Color;
+import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
+import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
+import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
+import org.andengine.opengl.util.GLState;
 
 import com.etherprod.worldshaper.SceneManager.SceneType;
 
 public class LoadingScene extends MyScene
-{	
+{
+	private static BuildableBitmapTextureAtlas	loading_atlas;
+	private static TiledTextureRegion			progressbar_region;
+	private static TiledTextureRegion			progressbar_bg_region;
+	private static ITextureRegion				loading_bg_region;
+	private static AnimatedSprite				progressbar;
+
 	@Override
 	public void createScene()
-	{
-		Font font50 = resourcesManager.getFont50();
+	{		
+		createResources();
 
-		setBackground(new Background(Color.WHITE));
+		// set color to #000033 (image background color)
+		this.setBackground(new Background(0, 0, 51f / 255f));
 
-		attachChild(new Text(40, 100, font50, "Loading...", activity.getVertexBufferObjectManager())); 
+		createBackground();
+		createLoadingBar();
 	}
 
 	@Override
@@ -35,5 +52,64 @@ public class LoadingScene extends MyScene
 	public void disposeScene()
 	{
 
+	}
+
+	private void createResources()
+	{
+		// create loading bar texture
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/ui/");
+		loading_atlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
+	    		1024, TextureOptions.BILINEAR);
+		loading_bg_region = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(loading_atlas, activity, "loading_bg.png");
+		progressbar_region = BitmapTextureAtlasTextureRegionFactory
+				.createTiledFromAsset(loading_atlas, activity, "loadbar.png", 1, 7);
+		progressbar_bg_region = BitmapTextureAtlasTextureRegionFactory
+				.createTiledFromAsset(loading_atlas, activity, "loadbar_bg.png", 1, 1);
+        
+		try
+		{
+			loading_atlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
+					BitmapTextureAtlas>(0, 1, 0));
+			loading_atlas.load();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void createLoadingBar()
+	{
+		progressbar = new AnimatedSprite(300, 250, progressbar_region,
+				activity.getVertexBufferObjectManager());
+
+		final long[] progressbar_animate = new long[] { 200, 150, 150, 150, 150, 200, 150, 150, 150, 150 };
+		final int[] frames = new int[] { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1};
+		progressbar.animate(progressbar_animate, frames, true);
+		progressbar.setScale(2f);
+
+		attachChild(new Sprite(180, 234, progressbar_bg_region, activity.getVertexBufferObjectManager()));
+		attachChild(progressbar);
+	}
+	
+	private void createBackground()
+	{
+		this.attachChild(new Sprite(0, 0, loading_bg_region, activity.getVertexBufferObjectManager())
+	    {
+	        @Override
+	        protected void preDraw(GLState pGLState, Camera pCamera) 
+	        {
+	            super.preDraw(pGLState, pCamera);
+	            pGLState.enableDither();
+	        }
+	    });	
+	}
+
+	public void setProgress(int progress)
+	{
+		progress = (int) ((((float) progress * 2f) / 200f) * 196f);
+		
+		progressbar.setWidth(2 + progress);
 	}
 }
