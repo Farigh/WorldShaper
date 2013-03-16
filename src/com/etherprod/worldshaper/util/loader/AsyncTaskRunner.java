@@ -4,15 +4,7 @@ import android.os.AsyncTask;
 
 public class AsyncTaskRunner extends AsyncTask<IAsyncTask, Integer, Void>
 {
-    // instance
-	private static final AsyncTaskRunner INSTANCE = new AsyncTaskRunner();
-
-	private IAsyncTask[] task;
-	
-	public static AsyncTaskRunner getInstance()
-    {
-        return INSTANCE;
-    }
+    private IAsyncTask[] task;
 	
 	@Override
 	protected Void doInBackground(IAsyncTask... tasks)

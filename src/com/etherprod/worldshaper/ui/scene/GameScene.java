@@ -154,6 +154,6 @@ public class GameScene extends HUDScene
 			}
 		};
 		
-		AsyncTaskRunner.getInstance().execute(callback);
+		new AsyncTaskRunner().execute(callback);
 	}
 }
