@@ -110,17 +110,20 @@ public class ResourcesManager
 	private void loadMenuFonts()
 	{
 		FontFactory.setAssetBasePath("fonts/");
-		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 512, 512, 
+		final ITexture titleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
+				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		final ITexture textFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
 				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-		title_font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
+		title_font = FontFactory.createStrokeFromAsset(activity.getFontManager(), titleFontTexture,
 				activity.getAssets(), "title.ttf", 50, false, Color.WHITE_ARGB_PACKED_INT, 2,
 				Color.BLACK_ARGB_PACKED_INT);
 
-		text_font = FontFactory.createFromAsset(activity.getFontManager(), mainFontTexture,
+		text_font = FontFactory.createFromAsset(activity.getFontManager(), textFontTexture,
 				activity.getAssets(), "text.ttf", 20, false, Color.WHITE_ARGB_PACKED_INT);
 
-		mainFontTexture.load();
+		titleFontTexture.load();
+		textFontTexture.load();
 		title_font.load();
 		text_font.load();
 	}
