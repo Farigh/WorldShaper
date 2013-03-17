@@ -31,12 +31,12 @@ public class SplashScene extends MyScene
 
 		splash = new Sprite(0, 0, splash_region, activity.getVertexBufferObjectManager())
 		{
-		    @Override
-		    protected void preDraw(GLState pGLState, Camera pCamera) 
-		    {
-		       super.preDraw(pGLState, pCamera);
-		       pGLState.enableDither();
-		    }
+			@Override
+			protected void preDraw(GLState pGLState, Camera pCamera) 
+			{
+				super.preDraw(pGLState, pCamera);
+				pGLState.enableDither();
+			}
 		};
 
 		splash.setPosition((activity.getCAMERA_WIDTH() - 400) / 2,
@@ -53,22 +53,23 @@ public class SplashScene extends MyScene
 	@Override
 	public SceneType getSceneType()
 	{
-	    return SceneType.SCENE_SPLASH;
+		return SceneType.SCENE_SPLASH;
 	}
 
 	@Override
 	public void disposeScene()
 	{
 		onDestroyResources();
-		
-	    splash.detachSelf();
-	    splash.dispose();
-	    this.detachSelf();
-	    this.dispose();
+
+		splash.detachSelf();
+		splash.dispose();
+		this.detachSelf();
+		this.dispose();
 	}
 
 	private void onCreateResources()
 	{
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/ui/");
 		splashTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 400, 300,
 				TextureOptions.BILINEAR);
 		splash_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashTextureAtlas, 

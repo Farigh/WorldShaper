@@ -29,20 +29,20 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 	private MenuScene menuChildScene;
 	private final int MENU_PLAY = 0;
 	private final int MENU_OPTIONS = 1;
-	
+
 	private static ITextureRegion menu_background_region;
 	private static ITextureRegion play_region;
 	private static ITextureRegion options_region;
-	    
+
 	private static BuildableBitmapTextureAtlas menuTextureAtlas;
-	
+
 	public static void onCreateRessources()
 	{
 		ResourcesManager.getInstance().loadMenuResources();
-		
+
 		MainActivity activity = ResourcesManager.getInstance().getActivity();	
-		
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("menu/");
+
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/ui/");
 		menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024,
 				TextureOptions.BILINEAR);
 		menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "main_menu_bg.png");
@@ -51,22 +51,22 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 
 		try 
 		{
-		    menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
-		    															 BitmapTextureAtlas>(0, 1, 0));
-		    menuTextureAtlas.load();
+			menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
+					BitmapTextureAtlas>(0, 1, 0));
+			menuTextureAtlas.load();
 		} 
 		catch (final TextureAtlasBuilderException e)
 		{
 			Debug.e(e);
 		}
 	}
-	
+
 	@Override
 	public void createScene()
 	{
 		// set color to #000033 (image background color)
 		this.setBackground(new Background(0, 0, 51f / 255f));
-		
+
 		createBackground();
 		createButtons();
 	}
@@ -74,13 +74,13 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 	@Override
 	public void onBackKeyPressed()
 	{
-	    System.exit(0);
+		System.exit(0);
 	}
 
 	@Override
 	public SceneType getSceneType()
 	{
-	    return SceneType.SCENE_MENU;
+		return SceneType.SCENE_MENU;
 	}
 
 	@Override
@@ -94,23 +94,23 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 			float pMenuItemLocalX, float pMenuItemLocalY)
 	{
 		switch(pMenuItem.getID())
-        {
-        	case MENU_PLAY:
-                //Load Game Scene!
-                SceneManager.getInstance().loadGameScene(activity.getEngine());
-        		return true;
-        	case MENU_OPTIONS:
-        		return true;
-        	default:
-        		return false;
-        }
+		{
+			case MENU_PLAY:
+				//Load Game Scene!
+				SceneManager.getInstance().loadGameScene(activity.getEngine());
+				return true;
+			case MENU_OPTIONS:
+				return true;
+			default:
+				return false;
+		}
 	}
-	
+
 	public void unloadTextures()
 	{
 		menuTextureAtlas.unload();
 	}
-	
+
 	public void loadTextures()
 	{
 		menuTextureAtlas.load();
@@ -120,38 +120,38 @@ public class MainMenuScene extends MyScene implements IOnMenuItemClickListener
 	{
 		this.attachChild(new Sprite(0, 0, menu_background_region,
 				activity.getVertexBufferObjectManager())
-	    {
-	        @Override
-	        protected void preDraw(GLState pGLState, Camera pCamera) 
-	        {
-	            super.preDraw(pGLState, pCamera);
-	            pGLState.enableDither();
-	        }
-	    });	
+		{
+			@Override
+			protected void preDraw(GLState pGLState, Camera pCamera) 
+			{
+				super.preDraw(pGLState, pCamera);
+				pGLState.enableDither();
+			}
+		});	
 	}
 
 	private void createButtons()
 	{
 		menuChildScene = new MenuScene(activity.getCamera());
-	    menuChildScene.setPosition(0, 0);
-	    
-	    // zoom on click
-	    final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, 
-	    		play_region, activity.getVertexBufferObjectManager()), 1.2f, 1);
-	    final IMenuItem optionsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, 
-	    		options_region, activity.getVertexBufferObjectManager()), 1.2f, 1);
-	    
-	    menuChildScene.addMenuItem(playMenuItem);
-	    menuChildScene.addMenuItem(optionsMenuItem);
-	    
-	    menuChildScene.buildAnimations();
-	    menuChildScene.setBackgroundEnabled(false);
-	    
-	    playMenuItem.setPosition(playMenuItem.getX(), playMenuItem.getY() + 26);
-	    optionsMenuItem.setPosition(optionsMenuItem.getX(), optionsMenuItem.getY() + 74);
-	    
-	    menuChildScene.setOnMenuItemClickListener(this);
-	    
-	    setChildScene(menuChildScene);
+		menuChildScene.setPosition(0, 0);
+
+		// zoom on click
+		final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, 
+				play_region, activity.getVertexBufferObjectManager()), 1.2f, 1);
+		final IMenuItem optionsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, 
+				options_region, activity.getVertexBufferObjectManager()), 1.2f, 1);
+
+		menuChildScene.addMenuItem(playMenuItem);
+		menuChildScene.addMenuItem(optionsMenuItem);
+
+		menuChildScene.buildAnimations();
+		menuChildScene.setBackgroundEnabled(false);
+
+		playMenuItem.setPosition(playMenuItem.getX(), playMenuItem.getY() + 26);
+		optionsMenuItem.setPosition(optionsMenuItem.getX(), optionsMenuItem.getY() + 74);
+
+		menuChildScene.setOnMenuItemClickListener(this);
+
+		setChildScene(menuChildScene);
 	}
 }
