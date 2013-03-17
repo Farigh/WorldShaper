@@ -20,109 +20,108 @@ public class ResourcesManager
 {
 	private static final ResourcesManager INSTANCE = new ResourcesManager();
 
-    private MainActivity 	activity;
+	private MainActivity 	activity;
 
-    //=====================================
-    //              Resources
-    //=====================================
+	//=====================================
+	//              Resources
+	//=====================================
 
-    public Font font20;
-    public Font font50;
+	public Font text_font;
+	public Font title_font;
 
-    /**
-     * This function MUST be used at the beginning of game loading.
-     * It will prepare Resources Manager properly, setting all needed parameters, 
-     * so we can latter access them from different classes
-     * 
-     * @param engine The game engine
-     * @param activity The main activity
-     * @param camera The scene camera
-     * @param vbom The vertex buffer object manager
-     */
-    public static void prepareManager(MainActivity activity)
-    {
-        getInstance().activity = activity;
-    }
+	/**
+	 * This function MUST be used at the beginning of game loading.
+	 * It will prepare Resources Manager properly, setting all needed parameters, 
+	 * so we can latter access them from different classes
+	 * 
+	 * @param engine The game engine
+	 * @param activity The main activity
+	 * @param camera The scene camera
+	 * @param vbom The vertex buffer object manager
+	 */
+	public static void prepareManager(MainActivity activity)
+	{
+		getInstance().activity = activity;
+	}
 
-    /**
-     * This function return the ResourcesManager instance
-     * 
-     * @return The ResourcesManager instance
-     */
-    public static ResourcesManager getInstance()
-    {
-        return INSTANCE;
-    }
+	/**
+	 * This function return the ResourcesManager instance
+	 * 
+	 * @return The ResourcesManager instance
+	 */
+	public static ResourcesManager getInstance()
+	{
+		return INSTANCE;
+	}
 
-    /**
-     * This function is in charge of loading game resources
-     */
-    public void loadMenuResources()
-    {
-    	loadMenuFonts();
-    }
+	/**
+	 * This function is in charge of loading game resources
+	 */
+	public void loadMenuResources()
+	{
+		loadMenuFonts();
+	}
 
-    /**
-     * This function is in charge of loading game resources
-     */
-    public void loadGameResources()
-    {
-        loadGameGraphics();
-    }
+	/**
+	 * This function is in charge of loading game resources
+	 */
+	public void loadGameResources()
+	{
+		loadGameGraphics();
+	}
 
-    /**
-     * This function is in charge of unloading game resources
-     */
-    public void unloadGameResources()
-    {
-    	//TODO: unload game's texture
-    }
+	/**
+	 * This function is in charge of unloading game resources
+	 */
+	public void unloadGameResources()
+	{
+		//TODO: unload game's texture
+	}
 
-    //=====================================
-    //      Getters/setters functions
-    //=====================================
+	//=====================================
+	//      Getters/setters functions
+	//=====================================
 
 	public MainActivity getActivity() 
-    {
+	{
 		return activity;
 	}
 
-	public Font getFont50()
+	public Font getTitleFont()
 	{
-		return font50;
+		return title_font;
 	}
 
-	public Font getFont20()
+	public Font getTextFont()
 	{
-		return font20;
+		return text_font;
 	}
 
-    //=====================================
-    //         Private functions
-    //=====================================
-    
-    private void loadGameGraphics()
-    {
+	//=====================================
+	//         Private functions
+	//=====================================
+
+	private void loadGameGraphics()
+	{
 		TileFactory.createResources(activity);
 		PlayerFactory.createResources(activity);
-    }
+	}
 
-    private void loadMenuFonts()
-    {
+	private void loadMenuFonts()
+	{
 		FontFactory.setAssetBasePath("fonts/");
-	    final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
-	    		TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-	    
-	    font50 = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
-	    		activity.getAssets(), "font.ttf", 50, false, Color.WHITE_ARGB_PACKED_INT, 2,
-	    		Color.BLACK_ARGB_PACKED_INT);
+		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 512, 512, 
+				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-	    font50.load();
-	    
-	    font20 = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
-	    		activity.getAssets(), "font.ttf", 20, false, Color.WHITE_ARGB_PACKED_INT, 1,
-	    		Color.BLACK_ARGB_PACKED_INT);
+		title_font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture,
+				activity.getAssets(), "title.ttf", 50, false, Color.WHITE_ARGB_PACKED_INT, 2,
+				Color.BLACK_ARGB_PACKED_INT);
 
-	    font20.load();
-    }
+		text_font = FontFactory.createFromAsset(activity.getFontManager(), mainFontTexture,
+				activity.getAssets(), "text.ttf", 20, false, Color.WHITE_ARGB_PACKED_INT);
+
+		mainFontTexture.load();
+		title_font.load();
+		text_font.load();
+	}
 }

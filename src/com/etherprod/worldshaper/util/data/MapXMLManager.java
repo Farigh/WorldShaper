@@ -21,6 +21,7 @@ import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
 
 import com.etherprod.worldshaper.MainActivity;
+import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.MapData;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
@@ -29,12 +30,17 @@ import com.etherprod.worldshaper.util.map.MapEntity;
 public class MapXMLManager extends DefaultHandler
 {
 	//private String	tmpVal;
-	private MapData		mapData;
-	private MapEntity	tmpEntity;
+	private static MapData	mapData;
+	private MapEntity		tmpEntity;
+	private static int		tile_number = 0;
+	private static int		current_parsed = 0;
 
 	public MapData load(MainActivity activity, String filename)
 	{
 		mapData = new MapData();
+		tile_number = 0;
+		current_parsed = 0;
+
 		//get a factory
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 
@@ -46,6 +52,7 @@ public class MapXMLManager extends DefaultHandler
 			InputStream base64 = new Base64InputStream(file, Base64.DEFAULT);
 			InputStream compress = new GZIPInputStream(base64);
 			InputStream stream = new BufferedInputStream(compress);
+
 			parser.parse(stream, this);
 			
 			stream.close();
@@ -63,9 +70,13 @@ public class MapXMLManager extends DefaultHandler
 		MapXMLManager parser = new MapXMLManager();
 		return parser.load(activity, filename);
 	}
-	
+
 	public static void saveMapToFile(MainActivity activity, String filename, MapData data)
 	{
+		mapData = null;
+		tile_number = data.getTileNumber();
+		current_parsed = 0;
+
 		try
 		{
 			OutputStream file = activity.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -73,32 +84,42 @@ public class MapXMLManager extends DefaultHandler
 			OutputStream compress = new GZIPOutputStream(base64);
 			OutputStream buffer = new BufferedOutputStream(compress);
 			OutputStreamWriter stream = new OutputStreamWriter(buffer);
-			
+
 			try
 			{
 				int height = data.getMapSize().x;
 				int width = data.getMapSize().y;
 				EntityData[][] map = data.getMap();
-				
+
 				stream.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-				stream.write("<level width=\"" + width + "\" height=\"" + height + "\">\n");
+				stream.write("<level tiles=\"" + data.getTileNumber() + "\" width=\"" + width 
+						+ "\" height=\"" + height + "\">\n");
 				stream.write("<spawn x=\"" + data.getMapSpawn().x
 						+ "\" y=\"" + data.getMapSpawn().y + "\" />\n");
-				
+
 				for (int i = 0; i < width; i++)
 				{
 					for (int j = 0; j < height; j++)
 					{
 						if (map[i][j] != null)
 						{
+							int previous = (int)(((float)current_parsed / (float)tile_number) * 50f);
+							int now = (int)(((float)(current_parsed + 1) / (float)tile_number) * 50f);
+							int percent = (int)(((float)(current_parsed + 1) / (float)tile_number) * 100f);
+							current_parsed++;
+
+							if (previous != now)
+								SceneManager.getInstance().setProgress(30 + now, "Saving world map "
+										+ percent + "%");
+
 							stream.write("<entity x=\"" + (i + 1) + "\" y=\"" + (j + 1) 
 									+ "\" type=\"" + map[i][j].getTileType() + "\" />\n");
 						}
 					}
 				}
-				
+
 				stream.write("</level>");
-				
+
 				stream.flush();
 			}
 			finally
@@ -124,12 +145,23 @@ public class MapXMLManager extends DefaultHandler
 			tmpEntity = new MapEntity(Integer.parseInt(attributes.getValue("x")),
 					Integer.parseInt(attributes.getValue("y")),
 					attributes.getValue("type"));
+
+			int previous = (int)(((float)current_parsed / (float)tile_number) * 75f);
+			int now = (int)(((float)(current_parsed + 1) / (float)tile_number) * 75f);
+			int percent = (int)(((float)(current_parsed + 1) / (float)tile_number) * 100f);
+
+			if (previous != now)
+				SceneManager.getInstance().setProgress(5 + now, "Loading world map " + percent + "%");
+
+			current_parsed++;
 		}
 
 		if (qName.equalsIgnoreCase("level"))
 		{
 			mapData.setMapSize(Integer.parseInt(attributes.getValue("height")),
 					Integer.parseInt(attributes.getValue("width")));
+
+			tile_number = Integer.parseInt(attributes.getValue("tiles"));
 		}
 
 		if (qName.equalsIgnoreCase("spawn"))
@@ -151,6 +183,7 @@ public class MapXMLManager extends DefaultHandler
 			EntityData entity = mapData.addEntity(EntityType.TILE,
 					tmpEntity.getX() - 1, tmpEntity.getY() - 1);
 			entity.setTileType(tmpEntity.getType());
+			tmpEntity = null;
 		}
 	}
 }

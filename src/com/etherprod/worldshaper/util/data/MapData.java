@@ -12,12 +12,15 @@ public class MapData implements Serializable
 
 	private IntVector2							map_size;
 	private IntVector2							map_spawn;
+	private int									tile_number = 0;
+
 	private EntityData[][]						map;
 
 	public MapData()
 	{
 		map_size = new IntVector2(0, 0);
 		map_spawn = new IntVector2(0, 0);
+		tile_number = 0;
 	}
 
 	public void setMapSize(int height, int width)
@@ -34,6 +37,7 @@ public class MapData implements Serializable
 	{
 		EntityData data = new EntityData(type);
 
+		tile_number++;
 		map[x][y] = data;
 
 		return data;
@@ -58,5 +62,10 @@ public class MapData implements Serializable
 	public EntityData[][] getMap()
 	{
 		return map;
+	}
+
+	public int getTileNumber()
+	{
+		return tile_number;
 	}
 }

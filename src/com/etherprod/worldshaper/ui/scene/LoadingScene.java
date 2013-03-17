@@ -91,6 +91,7 @@ public class LoadingScene extends MyScene
 
 		attachChild(new Sprite(180, 234, progressbar_bg_region, activity.getVertexBufferObjectManager()));
 		attachChild(progressbar);
+		setProgress(0);
 	}
 	
 	private void createBackground()
@@ -109,7 +110,7 @@ public class LoadingScene extends MyScene
 	public void setProgress(int progress)
 	{
 		progress = (int) ((((float) progress * 2f) / 200f) * 196f);
-		
-		progressbar.setWidth(2 + progress);
+
+		progressbar.setWidth(progress);
 	}
 }

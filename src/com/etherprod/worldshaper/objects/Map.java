@@ -1,15 +1,13 @@
 package com.etherprod.worldshaper.objects;
 
-import java.util.ArrayList;
-
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.etherprod.worldshaper.MainActivity;
+import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
@@ -27,17 +25,6 @@ import com.etherprod.worldshaper.util.map.MapGenerator;
 public class Map
 {
 	private final static int			TILE_SIZE = 31; // tile size - 1 to avoid spaces
-	private static ArrayList<Sprite>	_Tiles = new ArrayList<Sprite>();
-
-	/**
-	 * This function returns the map's objects list (tiles)
-	 * 
-	 * @return The map's tile array
-	 */
-	static public ArrayList<Sprite> getTilesList()
-	{
-		return _Tiles;
-	}
 
 	/**
 	 * Creates the map adding each tiles
@@ -47,56 +34,68 @@ public class Map
 	 * @param physicsWorld the game physics object
 	 */
 	public static Player mapCreate(Scene scene, MainActivity activity,
-			PhysicsWorld physicsWorld) 
+			PhysicsWorld physicsWorld)
 	{
 		MapData mapData;
 
 		// load map if exists
-		if (activity.getFileStreamPath("mp.dat").exists())
+		if (activity.getFileStreamPath("map.dat").exists())
+		{
+			SceneManager.getInstance().setProgress(5, "Loading world map");
 			mapData = MapXMLManager.loadMapFromFile(activity, "map.dat");
+		}
 		else
 		{
+			SceneManager.getInstance().setProgress(5, "Creating world map");
 			mapData = MapGenerator.generateHome();
 			MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
 		}
 
+		SceneManager.getInstance().setProgress(80, "Rendering world");
 		createMapFromData(scene, activity, physicsWorld, mapData);
 
 		// set camera bounds
 		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y * TILE_SIZE,
-				mapData.getMapSize().x * TILE_SIZE); 
+				mapData.getMapSize().x * TILE_SIZE);
 		activity.getCamera().setBoundsEnabled(true);
 
+		SceneManager.getInstance().setProgress(85, "Setting bounderies 0%");
 		// top
 		for (int i = 0; i <= mapData.getMapSize().y; i++)
 			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE,
 					-TILE_SIZE);
 
+		SceneManager.getInstance().setProgress(88, "Setting bounderies 25%");
 		// ground
 		for (int i = 0; i <= mapData.getMapSize().y; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE, 
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE,
 					mapData.getMapSize().x * TILE_SIZE);
 
+		SceneManager.getInstance().setProgress(91, "Setting bounderies 50%");
 		// left
 		for (int i = 0; i <= mapData.getMapSize().x; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, -TILE_SIZE, 
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, -TILE_SIZE,
 					i * TILE_SIZE);
 
+		SceneManager.getInstance().setProgress(94, "Setting bounderies 75%");
 		// right
 		for (int i = 0; i <= mapData.getMapSize().x; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, 
+			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
 					mapData.getMapSize().y * TILE_SIZE, i * TILE_SIZE);
 
-		return PlayerFactory.getNewPlayer(scene, activity, physicsWorld, 
-				mapData.getMapSpawn().x * TILE_SIZE,
-				mapData.getMapSpawn().y * TILE_SIZE);
+		SceneManager.getInstance().setProgress(97, "Adding player");
+		Player player = PlayerFactory.getNewPlayer(scene, activity, physicsWorld,
+				mapData.getMapSpawn().x * TILE_SIZE, mapData.getMapSpawn().y * TILE_SIZE);
+
+		SceneManager.getInstance().setProgress(100, "");
+		return player;
 	}
 
 	private static void createMapFromData(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld, MapData mapData)
 	{
 		EntityData[][] map = mapData.getMap();
-		
+
 		// only load on screen tiles
 		int maxWidth = mapData.getMapSpawn().x + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
 		for (int i = mapData.getMapSpawn().x - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
@@ -109,8 +108,8 @@ public class Map
 				EntityData data = map[i][j];
 				if ((data != null) && (data.getType() == EntityType.TILE))
 				{
-					Map.addTile(scene, activity.getVertexBufferObjectManager(), 
-							physicsWorld, i * TILE_SIZE, j * TILE_SIZE, 
+					Map.addTile(scene, activity.getVertexBufferObjectManager(),
+							physicsWorld, i * TILE_SIZE, j * TILE_SIZE,
 							TileType.valueOf(data.getTileType()));
 				}
 			}
@@ -120,8 +119,8 @@ public class Map
 	public static void addTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y, TileType tileType)
 	{
-		_Tiles.add(TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
-				tileType));
+		TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
+				tileType);
 	}
 
 	public static void addBound(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,

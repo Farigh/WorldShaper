@@ -56,10 +56,18 @@ public class MapGenerator
 		dirtStart += ((double) height * 0.001f * (double) randomizer.nextInt(30));
 		rockStart += ((double) height * 0.005f * (double) randomizer.nextInt(30));
 
+		int current_progress = 0;
 		for (int i = 0; i < width; i++)
 		{
 			float progress = (float)i / (float) width;
-			//TODO: display "Terraforming in progress : " + (int)(progress * 100f) + "%");
+			int now = (int)(progress * 25f);
+
+			if (current_progress != now)
+			{
+				SceneManager.getInstance().setProgress(5 + now, "Terraforming in progress "
+						+ (int)(progress * 100f) + "%");
+				current_progress++;
+			}
 
 			for (int j = dirtStart; j < height; j++)
 			{

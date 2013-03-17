@@ -166,4 +166,9 @@ public class SceneManager
 	{
 		gameScene.setLife((life < 0) ? 0 : life, maxlife);
 	}
+	
+	public void setProgress(int progress, String message)
+	{
+		loadingScene.setProgress(progress);
+	}
 }

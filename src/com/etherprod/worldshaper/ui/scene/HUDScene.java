@@ -135,7 +135,7 @@ public abstract class HUDScene extends MyScene
 	    gameHUD = new HUD();
 
 	    // adding life text
-	    lifeText = new Text(0, 0, resourcesManager.getFont50(), "Life : 9999/9999", 
+	    lifeText = new Text(0, 0, resourcesManager.getTitleFont(), "Life : 9999/9999", 
 	    		new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
 	    lifeText.setSkewCenter(0, 0);    
 	    lifeText.setText("Life: 50/50");
