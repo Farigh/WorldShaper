@@ -131,6 +131,7 @@ public class SceneManager
 	{
 		setScene(loadingScene);
 		gameScene.disposeScene();
+		gameScene = null;
 		ResourcesManager.getInstance().unloadGameResources();
 		mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
 		{
@@ -169,6 +170,6 @@ public class SceneManager
 	
 	public void setProgress(int progress, String message)
 	{
-		loadingScene.setProgress(progress);
+		loadingScene.setProgress(progress, message);
 	}
 }

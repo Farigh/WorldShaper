@@ -30,11 +30,11 @@ import com.etherprod.worldshaper.util.map.MapEntity;
 public class MapXMLManager extends DefaultHandler
 {
 	//private String	tmpVal;
-	private static MapData	mapData;
+	private MapData			mapData;
 	private MapEntity		tmpEntity;
 	private static int		tile_number = 0;
 	private static int		current_parsed = 0;
-
+	
 	public MapData load(MainActivity activity, String filename)
 	{
 		mapData = new MapData();
@@ -68,12 +68,15 @@ public class MapXMLManager extends DefaultHandler
 	public static MapData loadMapFromFile(MainActivity activity, String filename)
 	{
 		MapXMLManager parser = new MapXMLManager();
-		return parser.load(activity, filename);
+		MapData data = parser.load(activity, filename);
+		
+		parser = null;
+		
+		return data;
 	}
 
 	public static void saveMapToFile(MainActivity activity, String filename, MapData data)
 	{
-		mapData = null;
 		tile_number = data.getTileNumber();
 		current_parsed = 0;
 

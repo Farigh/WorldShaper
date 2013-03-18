@@ -23,57 +23,57 @@ import com.etherprod.worldshaper.util.loader.IAsyncTask;
  */
 public class GameScene extends HUDScene
 {
-	private static Player 	player;
+	private Player		 	player;
 	private PhysicsWorld	physicsWorld;
 
-    @Override
-    public void createScene()
-    {
-    	super.createScene();
-    	
+	@Override
+	public void createScene()
+	{
+		super.createScene();
+
 		// blue background
 		this.setBackground(new Background(0.09804f, 0.6274f, 0.8784f));
-		
+
 		//adding gravity physics
 		physicsWorld = new PhysicsWorld(new Vector2(0, SensorManager.GRAVITY_EARTH), false);
 		this.registerUpdateHandler(physicsWorld);
-    }
-    
-    @Override
-    public void onBackKeyPressed()
-    {
-    	// go back to main menu
-    	SceneManager.getInstance().loadMenuScene(activity.getEngine());
-    }
+	}
 
-    @Override
-    public SceneType getSceneType()
-    {
-        return SceneType.SCENE_GAME;
-    }
+	@Override
+	public void onBackKeyPressed()
+	{
+		// go back to main menu
+		SceneManager.getInstance().loadMenuScene(activity.getEngine());
+	}
 
-    @Override
-    public void disposeScene()
-    {
-    	super.disposeScene();
-        
-        // don't follow player anymore
-    	activity.getCamera().setChaseEntity(null);
+	@Override
+	public SceneType getSceneType()
+	{
+		return SceneType.SCENE_GAME;
+	}
 
-    	// no more bounds
+	@Override
+	public void disposeScene()
+	{
+		super.disposeScene();
+
+		// don't follow player anymore
+		activity.getCamera().setChaseEntity(null);
+
+		// no more bounds
 		activity.getCamera().setBoundsEnabled(false);
 
-    	// reset camera position
-        activity.getCamera().setCenter(activity.getCAMERA_WIDTH() / 2,
-        		activity.getCAMERA_HEIGHT() / 2);
-    }
+		// reset camera position
+		activity.getCamera().setCenter(activity.getCAMERA_WIDTH() / 2,
+				activity.getCAMERA_HEIGHT() / 2);
+	}
 
 	@Override
 	protected void onLeftControlChange(
 			BaseOnScreenControl pBaseOnScreenControl, float pValueX, 
 			float pValueY) 
 	{
-		Player player = GameScene.getPlayer();
+		Player player = GameScene.this.player;
 
 		if (player == null)
 			return;
@@ -82,7 +82,7 @@ public class GameScene extends HUDScene
 			player.walk();
 		else
 			player.stop();
-		
+
 		player.getBody().setLinearVelocity(5 * pValueX, player.getBody().getLinearVelocity().y);
 	}
 
@@ -98,7 +98,7 @@ public class GameScene extends HUDScene
 			BaseOnScreenControl pBaseOnScreenControl, float pValueX, 
 			float pValueY) 
 	{
-		Player player = GameScene.getPlayer();
+		Player player = GameScene.this.player;
 
 		if (player == null)
 			return;
@@ -127,10 +127,10 @@ public class GameScene extends HUDScene
 		/* Nothing. */
 	}
 
-	public static Player getPlayer()
-    {
-    	return player;
-    }
+	public Player getPlayer()
+	{
+		return player;
+	}
 
 	@Override
 	public void loadResouces()
@@ -150,7 +150,7 @@ public class GameScene extends HUDScene
 			public void onTaskCompleted()
 			{
 				SceneManager.getInstance().setScene(SceneManager.SceneType.SCENE_GAME);
-			    activity.getCamera().setHUD(gameHUD);
+				activity.getCamera().setHUD(gameHUD);
 			}
 		};
 		

@@ -39,7 +39,7 @@ public class Map
 		MapData mapData;
 
 		// load map if exists
-		if (activity.getFileStreamPath("mp.dat").exists())
+		if (activity.getFileStreamPath("map.dat").exists())
 		{
 			SceneManager.getInstance().setProgress(5, "Loading world map");
 			mapData = MapXMLManager.loadMapFromFile(activity, "map.dat");
@@ -48,7 +48,7 @@ public class Map
 		{
 			SceneManager.getInstance().setProgress(5, "Creating world map");
 			mapData = MapGenerator.generateHome();
-			//MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
+			MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
 		}
 
 		SceneManager.getInstance().setProgress(80, "Rendering world");
