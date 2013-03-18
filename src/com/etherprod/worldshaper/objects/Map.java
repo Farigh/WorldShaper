@@ -39,7 +39,7 @@ public class Map
 		MapData mapData;
 
 		// load map if exists
-		if (activity.getFileStreamPath("map.dat").exists())
+		if (activity.getFileStreamPath("mp.dat").exists())
 		{
 			SceneManager.getInstance().setProgress(5, "Loading world map");
 			mapData = MapXMLManager.loadMapFromFile(activity, "map.dat");
@@ -48,7 +48,7 @@ public class Map
 		{
 			SceneManager.getInstance().setProgress(5, "Creating world map");
 			mapData = MapGenerator.generateHome();
-			MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
+			//MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
 		}
 
 		SceneManager.getInstance().setProgress(80, "Rendering world");
@@ -61,27 +61,23 @@ public class Map
 
 		SceneManager.getInstance().setProgress(85, "Setting bounderies 0%");
 		// top
-		for (int i = 0; i <= mapData.getMapSize().y; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE,
-					-TILE_SIZE);
+		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
+				mapData.getMapSize().y * TILE_SIZE, 3, 0, -3);
 
 		SceneManager.getInstance().setProgress(88, "Setting bounderies 25%");
 		// ground
-		for (int i = 0; i <= mapData.getMapSize().y; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, i * TILE_SIZE,
-					mapData.getMapSize().x * TILE_SIZE);
+		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
+				mapData.getMapSize().y * TILE_SIZE, 3, 0, mapData.getMapSize().x * TILE_SIZE);
 
 		SceneManager.getInstance().setProgress(91, "Setting bounderies 50%");
 		// left
-		for (int i = 0; i <= mapData.getMapSize().x; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld, -TILE_SIZE,
-					i * TILE_SIZE);
+		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
+				3, mapData.getMapSize().x * TILE_SIZE, -3, 0);
 
 		SceneManager.getInstance().setProgress(94, "Setting bounderies 75%");
 		// right
-		for (int i = 0; i <= mapData.getMapSize().x; i++)
-			addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
-					mapData.getMapSize().y * TILE_SIZE, i * TILE_SIZE);
+		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
+				3, mapData.getMapSize().x * TILE_SIZE, mapData.getMapSize().y * TILE_SIZE, 0);
 
 		SceneManager.getInstance().setProgress(97, "Adding player");
 		Player player = PlayerFactory.getNewPlayer(scene, activity, physicsWorld,
@@ -124,9 +120,9 @@ public class Map
 	}
 
 	public static void addBound(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
-			PhysicsWorld physicsWorld, int x, int y)
+			PhysicsWorld physicsWorld, int width, int height, int x, int y)
 	{
-		PhysicsFactory.createBoxBody(physicsWorld, x + (TILE_SIZE /2), y + (TILE_SIZE / 2), 
-				TILE_SIZE, TILE_SIZE, BodyType.StaticBody, TileFactory.TILE_FIX);
+		PhysicsFactory.createBoxBody(physicsWorld, x + (width /2), y + (height / 2), 
+				width, height, BodyType.StaticBody, TileFactory.TILE_FIX);
 	}
 }
