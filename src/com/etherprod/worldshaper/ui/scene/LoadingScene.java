@@ -2,7 +2,6 @@ package com.etherprod.worldshaper.ui.scene;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
@@ -18,6 +17,7 @@ import org.andengine.opengl.util.GLState;
 import org.andengine.util.HorizontalAlign;
 
 import com.etherprod.worldshaper.SceneManager.SceneType;
+import com.etherprod.worldshaper.ui.ClippedAnimatedSprite;
 
 public class LoadingScene extends MyScene
 {
@@ -25,7 +25,7 @@ public class LoadingScene extends MyScene
 	private static TiledTextureRegion			progressbar_region;
 	private static TiledTextureRegion			progressbar_bg_region;
 	private static ITextureRegion				loading_bg_region;
-	private static AnimatedSprite				progressbar;
+	private static ClippedAnimatedSprite		progressbar;
 	private Text		 						loadingText;
 
 	@Override
@@ -96,7 +96,7 @@ public class LoadingScene extends MyScene
 	
 	private void createLoadingBar()
 	{
-		progressbar = new AnimatedSprite(300, 250, progressbar_region,
+		progressbar = new ClippedAnimatedSprite(300, 250, progressbar_region,
 				activity.getVertexBufferObjectManager());
 
 		final long[] progressbar_animate = new long[] { 200, 150, 150, 150, 150, 200, 150, 150, 150, 150 };
@@ -124,9 +124,9 @@ public class LoadingScene extends MyScene
 
 	public void setProgress(int progress, String message)
 	{
-		progress = (int) ((((float) progress * 2f) / 200f) * 196f);
+		progress = (int) (((float) progress / 100f) * 196f);
 
-		progressbar.setWidth(progress);
+		progressbar.setClip(200, 207, (int) (progress * progressbar.getScaleX()), 30);
 		loadingText.setText(message);
 	}
 }
