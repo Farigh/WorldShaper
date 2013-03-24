@@ -15,25 +15,35 @@ import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.HorizontalAlign;
+
+import com.etherprod.worldshaper.ui.ClippedAnimatedSprite;
 
 import android.opengl.GLES20;
 
 public abstract class HUDScene extends MyScene
 {
 	private BitmapTextureAtlas			mOnScreenControlTexture;
-	private BuildableBitmapTextureAtlas	buttonTextureAtlas;
+	private BuildableBitmapTextureAtlas	uiTextureAtlas;
 	private ITextureRegion				mOnScreenControlBaseTextureRegion;
 	private ITextureRegion				mOnScreenControlKnobTextureRegion;
 	protected HUD 						gameHUD;
-	private Text 						lifeText;
+	
+	// life
+	private Text 							lifeText;
+	private static TiledTextureRegion		lifebar_region;
+	private static TiledTextureRegion		lifebar_bg_region;
+	private static ClippedAnimatedSprite	lifebar;
+	private final static float				LIFEBAR_WIDTH = 96f;
 
 	private ITextureRegion				jump_texture;
 	
 	@Override
-    public void createScene()
-    {
-    }
+	public void createScene()
+	{
+
+	}
 	
 	public void loadResouces()
 	{
@@ -101,7 +111,7 @@ public abstract class HUDScene extends MyScene
 
 	private void onCreateResources()
 	{
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/controls/");
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/hud/");
 		this.mOnScreenControlTexture = new BitmapTextureAtlas(
 				activity.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
 		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
@@ -112,17 +122,24 @@ public abstract class HUDScene extends MyScene
 						"onscreen_control_knob.png", 128, 0);
 		this.mOnScreenControlTexture.load();
 
-	    buttonTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
-	    		1024, TextureOptions.BILINEAR);
-	    
-	    jump_texture = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(buttonTextureAtlas, activity, "jump_button.png");
+		// jump button
+		uiTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
+				1024, TextureOptions.BILINEAR);
 
-	    try
+		jump_texture = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(uiTextureAtlas, activity, "jump_button.png");
+
+		// life bar
+		lifebar_region = BitmapTextureAtlasTextureRegionFactory
+				.createTiledFromAsset(uiTextureAtlas, activity, "lifebar.png", 1, 21);
+		lifebar_bg_region = BitmapTextureAtlasTextureRegionFactory
+				.createTiledFromAsset(uiTextureAtlas, activity, "lifebar_bg.png", 1, 1);
+
+		try
 		{
-			buttonTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
-	        		BitmapTextureAtlas>(0, 1, 0));
-		    buttonTextureAtlas.load();
+			uiTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, 
+					BitmapTextureAtlas>(0, 1, 0));
+			uiTextureAtlas.load();
 		}
 		catch (Exception e)
 		{
@@ -132,69 +149,87 @@ public abstract class HUDScene extends MyScene
 	
 	private void createHUD()
 	{
-	    gameHUD = new HUD();
+		gameHUD = new HUD();
 
-	    // adding life text
-	    lifeText = new Text(0, 0, resourcesManager.getTitleFont(), "Life : 9999/9999", 
-	    		new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
-	    lifeText.setSkewCenter(0, 0);    
-	    lifeText.setText("Life: 50/50");
-	    lifeText.setScale(0.8f);
-	    gameHUD.attachChild(lifeText);
-	    
-	    // adding jump button
-	    final float x = activity.getCAMERA_WIDTH() - jump_texture.getWidth() - 100;
-	    final float y = activity.getCAMERA_HEIGHT() - jump_texture.getHeight() - 50;
-	    
-	    final Sprite jump_button = new Sprite(x, y, jump_texture, 
-	    		activity.getVertexBufferObjectManager())
-	    {
-	        public boolean onAreaTouched(TouchEvent touchEvent, float X, float Y)
-	        {
-	            if (touchEvent.isActionUp())
-	            {
-	            	onJumpButtonClick();
-	            }
-	            return true;
-	        };
-	    };
-	    
-	    jump_button.setScale(2.0f);
-	    
-	    gameHUD.registerTouchArea(jump_button);
-	    gameHUD.attachChild(jump_button);
+		// adding life text
+		createLife();
+
+		// adding jump button
+		final float x = activity.getCAMERA_WIDTH() - jump_texture.getWidth() - 100;
+		final float y = activity.getCAMERA_HEIGHT() - jump_texture.getHeight() - 50;
+
+		final Sprite jump_button = new Sprite(x, y, jump_texture, 
+				activity.getVertexBufferObjectManager())
+		{
+			public boolean onAreaTouched(TouchEvent touchEvent, float X, float Y)
+			{
+				if (touchEvent.isActionUp())
+				{
+					onJumpButtonClick();
+				}
+				return true;
+			};
+		};
+
+		jump_button.setScale(2.0f);
+
+		gameHUD.registerTouchArea(jump_button);
+		gameHUD.attachChild(jump_button);
+	}
+
+	private void createLife()
+	{
+		lifeText = new Text(0, 0, resourcesManager.getTitleFont(), "Life : 9999/9999", 
+				new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
+		lifeText.setSkewCenter(0, 0);    
+		lifeText.setText("Life: 50/50");
+		lifeText.setScale(0.8f);
+		gameHUD.attachChild(lifeText);
+
+		// life bar
+		lifebar = new ClippedAnimatedSprite(634, 21, lifebar_region,
+				activity.getVertexBufferObjectManager());
+
+		final long[] progressbar_animate = new long[] { 20000, 300, 300, 300, 300, 300, 300, 
+				300, 300, 300, 300, 300, 20000, 300, 300, 300, 300, 300, 300, 300, 300 };
+		lifebar.animate(progressbar_animate, true);
+		lifebar.setScale(2f);
+
+		gameHUD.attachChild(new Sprite(584, 14, lifebar_bg_region, activity.getVertexBufferObjectManager()));
+		gameHUD.attachChild(lifebar);
+
+		// set life to max
+		setLife(50, 50);
 	}
 
 	@Override
 	public void disposeScene()
 	{
 		// remove HUD on scene leave
-	    activity.getCamera().setHUD(null);
+		activity.getCamera().setHUD(null);
 	}
-	
 
 	public void setLife(int life, int max)
 	{
 		lifeText.setText("Life: " + Integer.toString(life) + "/" + Integer.toString(max));
-	}
-	
-    //=====================================
-    //         Abstract functions
-    //=====================================
 
-	protected abstract void onLeftControlChange(
-			BaseOnScreenControl pBaseOnScreenControl,
+		int life_width = (int) (((float)life / (float) max) * LIFEBAR_WIDTH);
+		lifebar.setClip(587, 440, (int) ((life_width + 1) * lifebar.getScaleX()), 24);
+	}
+
+	//=====================================
+	//         Abstract functions
+	//=====================================
+
+	protected abstract void onLeftControlChange(BaseOnScreenControl pBaseOnScreenControl,
 			float pValueX, float pValueY);
-	
-	protected abstract void onLeftControlClick(
-			final AnalogOnScreenControl pAnalogOnScreenControl);
-	
-	protected abstract void onRightControlChange(
-			BaseOnScreenControl pBaseOnScreenControl,
+
+	protected abstract void onLeftControlClick(final AnalogOnScreenControl pAnalogOnScreenControl);
+
+	protected abstract void onRightControlChange(BaseOnScreenControl pBaseOnScreenControl,
 			float pValueX, float pValueY);
-	
-	protected abstract void onRightControlClick(
-			final AnalogOnScreenControl pAnalogOnScreenControl);
-	
+
+	protected abstract void onRightControlClick(final AnalogOnScreenControl pAnalogOnScreenControl);
+
 	protected abstract void onJumpButtonClick();
 }

@@ -142,7 +142,8 @@ public class Player extends GameObject
 
 	protected void modifyLife(int modifier)
 	{
-		SceneManager.getInstance().setLife(life - modifier ,maxlife);
+		life -= modifier;
+		SceneManager.getInstance().setLife(life ,maxlife);
 	}
 
 	public void resetJump()

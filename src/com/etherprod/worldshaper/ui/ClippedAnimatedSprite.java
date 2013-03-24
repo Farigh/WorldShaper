@@ -5,6 +5,7 @@ import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+
 import android.opengl.GLES20;
 
 public class ClippedAnimatedSprite extends AnimatedSprite
@@ -27,7 +28,7 @@ public class ClippedAnimatedSprite extends AnimatedSprite
 		final boolean wasScissorTestEnabled = pGLState.enableScissorTest();
 
 		// apply clipping
-		GLES20.glScissor(clipX, clipY, clipHeight, clipWidth);
+		GLES20.glScissor(clipX, clipY, clipWidth, clipHeight);
 
 		// call parent class function
 		super.onManagedDraw(pGLState, pCamera);
@@ -36,11 +37,11 @@ public class ClippedAnimatedSprite extends AnimatedSprite
 		pGLState.setScissorTestEnabled(wasScissorTestEnabled);
 	}
 	
-	public void setClip(int clipX, int clipY, int clipHeight, int clipWidth)
+	public void setClip(int clipX, int clipY, int clipWidth, int clipHeight)
 	{
 		this.clipX = clipX;
 		this.clipY = clipY;
-		this.clipHeight = clipHeight;
 		this.clipWidth = clipWidth;
+		this.clipHeight = clipHeight;
 	}
 }
