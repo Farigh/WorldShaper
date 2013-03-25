@@ -1,5 +1,7 @@
 package com.etherprod.worldshaper;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.font.IFont;
@@ -7,6 +9,7 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.util.color.Color;
+import org.andengine.util.debug.Debug;
 
 import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
@@ -27,9 +30,10 @@ public class ResourcesManager
 	//              Resources
 	//=====================================
 
-	public Font text_font;
-	public Font life_text_font;
-	public Font title_font;
+	private Font	text_font;
+	private Font	life_text_font;
+	private Font	title_font;
+	private Music	mainMusic;
 
 	/**
 	 * This function MUST be used at the beginning of game loading.
@@ -69,6 +73,7 @@ public class ResourcesManager
 	 */
 	public void loadGameResources()
 	{
+		loadGameAudio();
 		loadGameGraphics();
 	}
 
@@ -103,10 +108,29 @@ public class ResourcesManager
 	{
 		return life_text_font;
 	}
+	
+	public Music getMainMusic()
+	{
+		return mainMusic;
+	}
 
 	//=====================================
 	//         Private functions
 	//=====================================
+
+	private void loadGameAudio()
+	{
+		try
+		{
+			MusicFactory.setAssetBasePath("sounds/");
+			mainMusic = MusicFactory.createMusicFromAsset(activity.getMusicManager(), activity, "main_theme.wav");
+			mainMusic.setLooping(true);
+		}
+		catch (final Exception e)
+		{
+			Debug.e(e);
+		}
+	}
 
 	private void loadGameGraphics()
 	{

@@ -64,7 +64,8 @@ public abstract class MyGameActivity extends BaseGameActivity
 		
 		// multi-touch and music needed
 		engineOptions.getTouchOptions().setNeedsMultiTouch(true);
-		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
+		engineOptions.getAudioOptions().setNeedsMusic(true);
+		engineOptions.getAudioOptions().setNeedsSound(true);
 
 		// wake-up phone only on screen at full brightness
 		engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
@@ -102,14 +103,14 @@ public abstract class MyGameActivity extends BaseGameActivity
 			throws Exception
 	{
 		mEngine.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() 
-	    {
+		{
 			public void onTimePassed(final TimerHandler pTimerHandler) 
 			{
 				mEngine.unregisterUpdateHandler(pTimerHandler);
 				SceneManager.getInstance().createMenuScene();
 			}
-	    }));
-	    pOnPopulateSceneCallback.onPopulateSceneFinished();
+		}));
+		pOnPopulateSceneCallback.onPopulateSceneFinished();
 	}
 
 	/**
@@ -119,8 +120,8 @@ public abstract class MyGameActivity extends BaseGameActivity
 	@Override
 	protected void onDestroy()
 	{
-	    super.onDestroy();
-	    System.exit(0);
+		super.onDestroy();
+		System.exit(0);
 	}
 	
 	/**
@@ -128,19 +129,19 @@ public abstract class MyGameActivity extends BaseGameActivity
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{  
-	    if (keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	    	// as the back action depends on the scene, the current scene's
-	    	// method is called
-	        SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
-	    }
-	    return false; 
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			// as the back action depends on the scene, the current scene's
+			// method is called
+			SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
+		}
+		return false; 
 	}
 
-    //=====================================
-    //      Getters/setters functions
-    //=====================================
+	//=====================================
+	//      Getters/setters functions
+	//=====================================
 	
 	public int getCAMERA_WIDTH()
 	{
@@ -157,9 +158,9 @@ public abstract class MyGameActivity extends BaseGameActivity
 		return camera;
 	}
 
-    //=====================================
-    //         Abstract functions
-    //=====================================
+	//=====================================
+	//         Abstract functions
+	//=====================================
 
 	protected abstract void onCreateResources();
 	protected abstract void onCreateScene();

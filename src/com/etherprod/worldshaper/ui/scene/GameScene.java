@@ -9,6 +9,7 @@ import org.andengine.util.math.MathUtils;
 import android.hardware.SensorManager;
 
 import com.badlogic.gdx.math.Vector2;
+import com.etherprod.worldshaper.ResourcesManager;
 import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
@@ -151,9 +152,10 @@ public class GameScene extends HUDScene
 			{
 				SceneManager.getInstance().setScene(SceneManager.SceneType.SCENE_GAME);
 				activity.getCamera().setHUD(gameHUD);
+				ResourcesManager.getInstance().getMainMusic().play();
 			}
 		};
-		
+
 		new AsyncTaskRunner().execute(callback);
 	}
 }

@@ -130,6 +130,7 @@ public class SceneManager
 	public void loadMenuScene(final Engine mEngine)
 	{
 		setScene(loadingScene);
+		ResourcesManager.getInstance().getMainMusic().pause();
 		gameScene.disposeScene();
 		gameScene = null;
 		ResourcesManager.getInstance().unloadGameResources();
