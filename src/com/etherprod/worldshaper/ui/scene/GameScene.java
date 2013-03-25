@@ -152,7 +152,10 @@ public class GameScene extends HUDScene
 			{
 				SceneManager.getInstance().setScene(SceneManager.SceneType.SCENE_GAME);
 				activity.getCamera().setHUD(gameHUD);
-				ResourcesManager.getInstance().getMainMusic().play();
+
+				// play music if option is activated
+				if (activity.isMusicActive())
+					ResourcesManager.getInstance().getMainMusic().play();
 			}
 		};
 

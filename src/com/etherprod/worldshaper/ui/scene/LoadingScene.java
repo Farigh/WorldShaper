@@ -23,7 +23,7 @@ public class LoadingScene extends MyScene
 {
 	private static BuildableBitmapTextureAtlas	loading_atlas;
 	private static TiledTextureRegion			progressbar_region;
-	private static TiledTextureRegion			progressbar_bg_region;
+	private static ITextureRegion				progressbar_bg_region;
 	private static ITextureRegion				loading_bg_region;
 	private static ClippedAnimatedSprite		progressbar;
 	private Text		 						loadingText;
@@ -70,7 +70,7 @@ public class LoadingScene extends MyScene
 		progressbar_region = BitmapTextureAtlasTextureRegionFactory
 				.createTiledFromAsset(loading_atlas, activity, "loadbar.png", 1, 7);
 		progressbar_bg_region = BitmapTextureAtlasTextureRegionFactory
-				.createTiledFromAsset(loading_atlas, activity, "loadbar_bg.png", 1, 1);
+				.createFromAsset(loading_atlas, activity, "loadbar_bg.png");
 
 		try
 		{

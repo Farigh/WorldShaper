@@ -32,8 +32,11 @@ public abstract class MyGameActivity extends BaseGameActivity
 	protected static int		CAMERA_WIDTH	= 480;
 	protected static int		CAMERA_HEIGHT	= 320;
 	
-	protected BoundCamera			camera;
+	protected BoundCamera		camera;
 	private   MyScene			scene;
+
+	private boolean music_active_is		= true;
+	private boolean sounds_active_are	= true;
 	
 	/**
 	 * Replace the default Engine by a 60FPS limited one
@@ -42,7 +45,7 @@ public abstract class MyGameActivity extends BaseGameActivity
 	@Override
 	public Engine onCreateEngine(EngineOptions pEngineOptions) 
 	{
-	    return new LimitedFPSEngine(pEngineOptions, 60);
+		return new LimitedFPSEngine(pEngineOptions, 60);
 	}
 
 	@Override
@@ -139,6 +142,16 @@ public abstract class MyGameActivity extends BaseGameActivity
 		return false; 
 	}
 
+	public void computeMusic()
+	{
+		music_active_is = !music_active_is;
+	}
+
+	public void computeSounds()
+	{
+		sounds_active_are = !sounds_active_are;
+	}
+
 	//=====================================
 	//      Getters/setters functions
 	//=====================================
@@ -157,6 +170,16 @@ public abstract class MyGameActivity extends BaseGameActivity
 	{
 		return camera;
 	}
+
+	public boolean isMusicActive()
+	{
+		return music_active_is;
+	}
+
+	public boolean isSoundsActive()
+	{
+		return sounds_active_are;
+	}	
 
 	//=====================================
 	//         Abstract functions

@@ -8,6 +8,7 @@ import com.etherprod.worldshaper.ui.scene.GameScene;
 import com.etherprod.worldshaper.ui.scene.LoadingScene;
 import com.etherprod.worldshaper.ui.scene.MainMenuScene;
 import com.etherprod.worldshaper.ui.scene.MyScene;
+import com.etherprod.worldshaper.ui.scene.SettingsScene;
 import com.etherprod.worldshaper.ui.scene.SplashScene;
 
 /**
@@ -24,6 +25,7 @@ public class SceneManager
 	// Game's scenes
 	private MyScene			splashScene;
 	private MainMenuScene	menuScene;
+	private SettingsScene	settingsScene;
 	private LoadingScene	loadingScene;
 	private GameScene		gameScene;
 
@@ -40,6 +42,7 @@ public class SceneManager
 	{
 		SCENE_SPLASH,
 		SCENE_MENU,
+		SCENE_SETTINGS,
 		SCENE_GAME,
 	}
 
@@ -68,11 +71,15 @@ public class SceneManager
 				setScene(gameScene);
 				currentScene = gameScene;
 				break;
+			case SCENE_MENU:
+				setScene(menuScene);
+				currentScene = menuScene;
+				break;
 			default:
 				break;
 		}
 	}
-    
+
 	//=====================================
 	//      Scene creation functions
 	//=====================================
@@ -88,6 +95,9 @@ public class SceneManager
 		MainMenuScene.onCreateRessources();
 		menuScene = new MainMenuScene();
 		loadingScene = new LoadingScene();
+		SettingsScene.onCreateRessources();
+		settingsScene = new SettingsScene();
+
 		setScene(menuScene);
 		destroySplashScene();
 	}
@@ -130,7 +140,10 @@ public class SceneManager
 	public void loadMenuScene(final Engine mEngine)
 	{
 		setScene(loadingScene);
-		ResourcesManager.getInstance().getMainMusic().pause();
+
+		if (ResourcesManager.getInstance().getActivity().isMusicActive())
+			ResourcesManager.getInstance().getMainMusic().pause();
+
 		gameScene.disposeScene();
 		gameScene = null;
 		ResourcesManager.getInstance().unloadGameResources();
@@ -141,6 +154,19 @@ public class SceneManager
 				mEngine.unregisterUpdateHandler(pTimerHandler);
 				menuScene.loadTextures();
 				setScene(menuScene);
+			}
+		}));
+	}
+
+	public void loadSettingsScene(final Engine mEngine)
+	{
+		mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
+		{
+			public void onTimePassed(final TimerHandler pTimerHandler) 
+			{
+				mEngine.unregisterUpdateHandler(pTimerHandler);
+				settingsScene.loadTextures();
+				setScene(settingsScene);
 			}
 		}));
 	}

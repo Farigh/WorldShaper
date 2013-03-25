@@ -33,7 +33,7 @@ public abstract class HUDScene extends MyScene
 	// life
 	private Text							lifeText;
 	private static TiledTextureRegion		lifebar_region;
-	private static TiledTextureRegion		lifebar_bg_region;
+	private static ITextureRegion			lifebar_bg_region;
 	private static ClippedAnimatedSprite	lifebar;
 	private static Sprite					lifebar_bg;
 	private final static float				LIFEBAR_WIDTH = 96f;
@@ -138,7 +138,7 @@ public abstract class HUDScene extends MyScene
 		lifebar_region = BitmapTextureAtlasTextureRegionFactory
 				.createTiledFromAsset(uiTextureAtlas, activity, "lifebar.png", 1, 21);
 		lifebar_bg_region = BitmapTextureAtlasTextureRegionFactory
-				.createTiledFromAsset(uiTextureAtlas, activity, "lifebar_bg.png", 1, 1);
+				.createFromAsset(uiTextureAtlas, activity, "lifebar_bg.png");
 
 		try
 		{
