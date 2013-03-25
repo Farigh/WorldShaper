@@ -2,6 +2,7 @@ package com.etherprod.worldshaper;
 
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.font.IFont;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
@@ -27,6 +28,7 @@ public class ResourcesManager
 	//=====================================
 
 	public Font text_font;
+	public Font life_text_font;
 	public Font title_font;
 
 	/**
@@ -97,6 +99,11 @@ public class ResourcesManager
 		return text_font;
 	}
 
+	public IFont getLifeTextFont()
+	{
+		return life_text_font;
+	}
+
 	//=====================================
 	//         Private functions
 	//=====================================
@@ -114,6 +121,8 @@ public class ResourcesManager
 				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture textFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
 				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		final ITexture lifeTextFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, 
+				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
 		title_font = FontFactory.createStrokeFromAsset(activity.getFontManager(), titleFontTexture,
 				activity.getAssets(), "title.ttf", 50, false, Color.WHITE_ARGB_PACKED_INT, 2,
@@ -122,9 +131,14 @@ public class ResourcesManager
 		text_font = FontFactory.createFromAsset(activity.getFontManager(), textFontTexture,
 				activity.getAssets(), "text.ttf", 20, false, Color.WHITE_ARGB_PACKED_INT);
 
+		life_text_font = FontFactory.createFromAsset(activity.getFontManager(), lifeTextFontTexture,
+				activity.getAssets(), "text.ttf", 22, false, Color.WHITE_ARGB_PACKED_INT);
+
 		titleFontTexture.load();
 		textFontTexture.load();
+		lifeTextFontTexture.load();
 		title_font.load();
 		text_font.load();
+		life_text_font.load();
 	}
 }

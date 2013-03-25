@@ -31,20 +31,25 @@ public abstract class HUDScene extends MyScene
 	protected HUD 						gameHUD;
 	
 	// life
-	private Text 							lifeText;
+	private Text							lifeText;
 	private static TiledTextureRegion		lifebar_region;
 	private static TiledTextureRegion		lifebar_bg_region;
 	private static ClippedAnimatedSprite	lifebar;
+	private static Sprite					lifebar_bg;
 	private final static float				LIFEBAR_WIDTH = 96f;
 
 	private ITextureRegion				jump_texture;
+	
+	// constants
+	private final static int LIFEBAR_BG_POSITION_X = 584;
+	private final static int LIFEBAR_BG_POSITION_Y = 14;
 	
 	@Override
 	public void createScene()
 	{
 
 	}
-	
+
 	public void loadResouces()
 	{
 		onCreateResources();
@@ -179,13 +184,6 @@ public abstract class HUDScene extends MyScene
 
 	private void createLife()
 	{
-		lifeText = new Text(0, 0, resourcesManager.getTitleFont(), "Life : 9999/9999", 
-				new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
-		lifeText.setSkewCenter(0, 0);    
-		lifeText.setText("Life: 50/50");
-		lifeText.setScale(0.8f);
-		gameHUD.attachChild(lifeText);
-
 		// life bar
 		lifebar = new ClippedAnimatedSprite(634, 21, lifebar_region,
 				activity.getVertexBufferObjectManager());
@@ -195,8 +193,13 @@ public abstract class HUDScene extends MyScene
 		lifebar.animate(progressbar_animate, true);
 		lifebar.setScale(2f);
 
-		gameHUD.attachChild(new Sprite(584, 14, lifebar_bg_region, activity.getVertexBufferObjectManager()));
+		lifebar_bg = new Sprite(LIFEBAR_BG_POSITION_X, LIFEBAR_BG_POSITION_Y, lifebar_bg_region, activity.getVertexBufferObjectManager());
+		gameHUD.attachChild(lifebar_bg);
 		gameHUD.attachChild(lifebar);
+
+		lifeText = new Text(0, 0, resourcesManager.getLifeTextFont(), "99999/99999", 
+				new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager());
+		gameHUD.attachChild(lifeText);
 
 		// set life to max
 		setLife(50, 50);
@@ -211,7 +214,11 @@ public abstract class HUDScene extends MyScene
 
 	public void setLife(int life, int max)
 	{
-		lifeText.setText("Life: " + Integer.toString(life) + "/" + Integer.toString(max));
+		lifeText.setText(Integer.toString(life) + "/" + Integer.toString(max));
+		// center it to life bar
+		float pX = LIFEBAR_BG_POSITION_X + (lifebar_bg.getWidth() / 2) - (lifeText.getWidth() / 2);
+		float pY = LIFEBAR_BG_POSITION_Y + (lifebar_bg.getHeight() / 2) - (lifeText.getHeight() / 2) + 2;
+		lifeText.setPosition(pX, pY);
 
 		int life_width = (int) (((float)life / (float) max) * LIFEBAR_WIDTH);
 		lifebar.setClip(587, 440, (int) ((life_width + 1) * lifebar.getScaleX()), 24);
