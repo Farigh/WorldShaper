@@ -24,7 +24,8 @@ import com.etherprod.worldshaper.util.map.MapGenerator;
  */
 public class Map
 {
-	private final static int			TILE_SIZE = 31; // tile size - 1 to avoid spaces
+	public final static int			TILE_SIZE = 31; // tile size - 1 to avoid spaces
+	public static MapData			mapData;
 
 	/**
 	 * Creates the map adding each tiles
@@ -36,8 +37,6 @@ public class Map
 	public static Player mapCreate(Scene scene, MainActivity activity,
 			PhysicsWorld physicsWorld)
 	{
-		MapData mapData;
-
 		// load map if exists
 		if (activity.getFileStreamPath("mp.dat").exists())
 		{
@@ -52,53 +51,55 @@ public class Map
 		}
 
 		SceneManager.getInstance().setProgress(80, "Rendering world");
-		createMapFromData(scene, activity, physicsWorld, mapData);
+
+		Player player = PlayerFactory.getNewPlayer(scene, activity, physicsWorld,
+				mapData.getMapSpawn().x * TILE_SIZE, mapData.getMapSpawn().y * TILE_SIZE);
+
+		int playerX = (int) (player.getX() / TILE_SIZE);
+		int playerY = (int) (player.getY() / TILE_SIZE);
+		createMapFromData(scene, activity, physicsWorld, mapData, playerX, playerY);
 
 		// set camera bounds
 		activity.getCamera().setBounds(0, 0, mapData.getMapSize().y * TILE_SIZE,
 				mapData.getMapSize().x * TILE_SIZE);
 		activity.getCamera().setBoundsEnabled(true);
 
-		SceneManager.getInstance().setProgress(85, "Setting bounderies 0%");
+		SceneManager.getInstance().setProgress(88, "Setting bounderies 0%");
 		// top
 		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
 				mapData.getMapSize().y * TILE_SIZE, 3, 0, -3);
 
-		SceneManager.getInstance().setProgress(88, "Setting bounderies 25%");
+		SceneManager.getInstance().setProgress(91, "Setting bounderies 25%");
 		// ground
 		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
 				mapData.getMapSize().y * TILE_SIZE, 3, 0, mapData.getMapSize().x * TILE_SIZE);
 
-		SceneManager.getInstance().setProgress(91, "Setting bounderies 50%");
+		SceneManager.getInstance().setProgress(94, "Setting bounderies 50%");
 		// left
 		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
 				3, mapData.getMapSize().x * TILE_SIZE, -3, 0);
 
-		SceneManager.getInstance().setProgress(94, "Setting bounderies 75%");
+		SceneManager.getInstance().setProgress(97, "Setting bounderies 75%");
 		// right
 		addBound(scene, activity.getVertexBufferObjectManager(), physicsWorld,
 				3, mapData.getMapSize().x * TILE_SIZE, mapData.getMapSize().y * TILE_SIZE, 0);
-
-		SceneManager.getInstance().setProgress(97, "Adding player");
-		Player player = PlayerFactory.getNewPlayer(scene, activity, physicsWorld,
-				mapData.getMapSpawn().x * TILE_SIZE, mapData.getMapSpawn().y * TILE_SIZE);
 
 		SceneManager.getInstance().setProgress(100, "");
 		return player;
 	}
 
 	private static void createMapFromData(Scene scene, MainActivity activity,
-			PhysicsWorld physicsWorld, MapData mapData)
+			PhysicsWorld physicsWorld, MapData mapData, int playerX, int playerY)
 	{
 		EntityData[][] map = mapData.getMap();
-
+		
 		// only load on screen tiles
-		int maxWidth = mapData.getMapSpawn().x + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 2;
-		for (int i = mapData.getMapSpawn().x - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 1;
+		int maxWidth = playerX + ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) + 3;
+		for (int i = playerX - ((activity.getCAMERA_WIDTH() / TILE_SIZE) / 2) - 2;
 			 i < maxWidth; i++)
 		{
-			int maxHeight = mapData.getMapSpawn().y + ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) + 2;
-			for (int j = mapData.getMapSpawn().y - ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2 - 1);
+			int maxHeight = playerY + ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) + 3;
+			for (int j = playerY - ((activity.getCAMERA_HEIGHT() / TILE_SIZE) / 2) - 2;
 				 j < maxHeight; j++)
 			{
 				EntityData data = map[i][j];
@@ -115,6 +116,7 @@ public class Map
 	public static void addTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y, TileType tileType)
 	{
+		//TODO: check if already added
 		TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
 				tileType);
 	}

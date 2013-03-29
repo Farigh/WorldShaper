@@ -1,9 +1,11 @@
 package com.etherprod.worldshaper.ui.scene;
 
+import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
 import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.opengl.util.GLState;
 import org.andengine.util.math.MathUtils;
 
 import android.hardware.SensorManager;
@@ -14,6 +16,9 @@ import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
+import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
+import com.etherprod.worldshaper.util.data.EntityData;
+import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.loader.AsyncTaskRunner;
 import com.etherprod.worldshaper.util.loader.IAsyncTask;
 
@@ -26,6 +31,8 @@ public class GameScene extends HUDScene
 {
 	private Player		 	player;
 	private PhysicsWorld	physicsWorld;
+	private int				lastX;
+	private int				lastY;
 
 	@Override
 	public void createScene()
@@ -145,6 +152,8 @@ public class GameScene extends HUDScene
 			{
 				// create map
 				player = Map.mapCreate(scene, activity, physicsWorld);
+				lastX = (int) (player.getX() / Map.TILE_SIZE);
+				lastY = (int) (player.getY() / Map.TILE_SIZE);
 			}
 
 			@Override
@@ -160,5 +169,66 @@ public class GameScene extends HUDScene
 		};
 
 		new AsyncTaskRunner().execute(callback);
+	}
+	
+	@Override
+	protected void onManagedDraw(final GLState pGLState, final Camera pCamera)
+	{
+		// update onscreen elements
+		EntityData[][] map = Map.mapData.getMap();
+		int newX = (int) (player.getX() / Map.TILE_SIZE);
+		int newY = (int) (player.getY() / Map.TILE_SIZE);
+
+		if (newX != lastX)
+		{
+			// add new elements horizontally
+			int populateX = 0;
+			if (newX > lastX)
+				populateX = newX + ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2) + 2;
+			else
+				populateX = newX - ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2) - 1;
+
+			int halfHeight = ((activity.getCAMERA_HEIGHT() / Map.TILE_SIZE) / 2);
+			int newMaxY = newY + halfHeight + 3;
+			for (int j = newY - halfHeight - 2; j < newMaxY; j++)
+			{
+				EntityData data = map[populateX][j];
+				if ((data != null) && (data.getType() == EntityType.TILE))
+				{
+					Map.addTile(this, activity.getVertexBufferObjectManager(),
+							physicsWorld, populateX * Map.TILE_SIZE, j * Map.TILE_SIZE,
+							TileType.valueOf(data.getTileType()));
+				}
+			}
+			
+			lastX = newX;
+		}
+
+		if (newY != lastY)
+		{
+			// add new elements horizontally
+			int populateY = 0;
+			if (newY > lastY)
+				populateY = newY + ((activity.getCAMERA_HEIGHT() / Map.TILE_SIZE) / 2) + 2;
+			else
+				populateY = newY - ((activity.getCAMERA_HEIGHT() / Map.TILE_SIZE) / 2) - 1;	
+
+			int halfWidth = ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2);
+			int newMaxX = newX + halfWidth + 3;
+			for (int i = newX - halfWidth - 2; i < newMaxX; i++)
+			{
+				EntityData data = map[i][populateY];
+				if ((data != null) && (data.getType() == EntityType.TILE))
+				{
+					Map.addTile(this, activity.getVertexBufferObjectManager(),
+							physicsWorld, i * Map.TILE_SIZE, populateY * Map.TILE_SIZE,
+							TileType.valueOf(data.getTileType()));
+				}
+			}
+			
+			lastY = newY;
+		}
+
+		super.onManagedDraw(pGLState, pCamera);
 	}
 }
