@@ -2,6 +2,7 @@ package com.etherprod.worldshaper.objects.factories;
 
 import java.util.ArrayList;
 
+import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
@@ -20,6 +21,9 @@ import org.andengine.util.debug.Debug;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.etherprod.worldshaper.MainActivity;
+import com.etherprod.worldshaper.ResourcesManager;
+import com.etherprod.worldshaper.objects.Map;
+import com.etherprod.worldshaper.objects.SelfDetachableSpriteWithBoby;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -113,12 +117,37 @@ public class TileFactory
 	public static Sprite addNewTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y, TileType tileType)
 	{
-		Sprite tile = new Sprite(x, y, textureRegionList.get(tileType.toInt()), 
-				vertexBufferObjectManager);
-		
+		SelfDetachableSpriteWithBoby tile = new SelfDetachableSpriteWithBoby(x, y, textureRegionList.get(tileType.toInt()), 
+				vertexBufferObjectManager)
+		{
+			@Override
+			protected void onManagedUpdate(float pSecondsElapsed) 
+			{
+				super.onManagedUpdate(pSecondsElapsed);
+				Camera camera = ResourcesManager.getInstance().getActivity().getCamera();
+
+				// remove self when out of the screen
+				int posX = ((int) this.getX() / Map.TILE_SIZE);
+				int posY = ((int) this.getY() / Map.TILE_SIZE);
+				int camHalfHeight = (int) ((camera.getHeight() / 2) / Map.TILE_SIZE);
+				int camHalfWidth = (int) ((camera.getWidth() / 2) / Map.TILE_SIZE);
+				int camX = ((int) camera.getCenterX() / Map.TILE_SIZE);
+				int camY = ((int) camera.getCenterY() / Map.TILE_SIZE);
+
+				if ((posX < (camX - camHalfWidth - 2))
+					|| (posX > (camX + camHalfWidth + 2))
+					|| (posY < (camY - camHalfHeight - 1))
+					|| (posY > (camY + camHalfHeight + 2))
+					)
+				{
+					this.safeDetachSelfAndChildren(ResourcesManager.getInstance().getActivity());
+				}
+			}
+		};
+
 		// set physics to not affect them
-		PhysicsFactory.createBoxBody(physicsWorld, tile, BodyType.StaticBody, TILE_FIX);
-		
+		tile.setBody(physicsWorld, BodyType.StaticBody, TILE_FIX);
+
 		scene.attachChild(tile);
 
 		return tile;
