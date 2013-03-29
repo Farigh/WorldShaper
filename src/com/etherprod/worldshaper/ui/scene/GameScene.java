@@ -181,7 +181,7 @@ public class GameScene extends HUDScene
 
 		if (newX != lastX)
 		{
-			// add new elements horizontally
+			// add new elements vertically
 			int populateX = 0;
 			if (newX > lastX)
 				populateX = newX + ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2) + 2;
@@ -193,7 +193,7 @@ public class GameScene extends HUDScene
 			for (int j = newY - halfHeight - 2; j < newMaxY; j++)
 			{
 				EntityData data = map[populateX][j];
-				if ((data != null) && (data.getType() == EntityType.TILE))
+				if ((data != null) && (data.getType() == EntityType.TILE) && !data.created)
 				{
 					Map.addTile(this, activity.getVertexBufferObjectManager(),
 							physicsWorld, populateX * Map.TILE_SIZE, j * Map.TILE_SIZE,
@@ -218,7 +218,7 @@ public class GameScene extends HUDScene
 			for (int i = newX - halfWidth - 2; i < newMaxX; i++)
 			{
 				EntityData data = map[i][populateY];
-				if ((data != null) && (data.getType() == EntityType.TILE))
+				if ((data != null) && (data.getType() == EntityType.TILE) && !data.created)
 				{
 					Map.addTile(this, activity.getVertexBufferObjectManager(),
 							physicsWorld, i * Map.TILE_SIZE, populateY * Map.TILE_SIZE,

@@ -1,4 +1,4 @@
-package com.etherprod.worldshaper.objects;
+package com.etherprod.worldshaper.ui;
 
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.sprite.vbo.ISpriteVertexBufferObject;

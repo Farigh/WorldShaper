@@ -7,6 +7,7 @@ public class EntityData implements Serializable
 	private static final long	serialVersionUID	= 1L;
 	public EntityType			type;
 	public String				tileType;
+	public boolean				created = false;
 
 	public enum EntityType
 	{

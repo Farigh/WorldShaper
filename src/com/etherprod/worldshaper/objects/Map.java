@@ -116,7 +116,6 @@ public class Map
 	public static void addTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y, TileType tileType)
 	{
-		//TODO: check if already added
 		TileFactory.addNewTile(scene, vertexBufferObjectManager, physicsWorld, x, y,
 				tileType);
 	}

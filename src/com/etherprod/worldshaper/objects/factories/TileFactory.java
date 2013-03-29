@@ -23,7 +23,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.ResourcesManager;
 import com.etherprod.worldshaper.objects.Map;
-import com.etherprod.worldshaper.objects.SelfDetachableSpriteWithBoby;
+import com.etherprod.worldshaper.ui.SelfDetachableSpriteWithBoby;
 
 /**
  * @author GARCIN David <david.garcin.pro@gmail.com>
@@ -117,6 +117,10 @@ public class TileFactory
 	public static Sprite addNewTile(Scene scene, VertexBufferObjectManager vertexBufferObjectManager,
 			PhysicsWorld physicsWorld, int x, int y, TileType tileType)
 	{
+		int posX = (int) (x / Map.TILE_SIZE);
+		int posY = (int) (y / Map.TILE_SIZE);
+		Map.mapData.getMap()[posX][posY].created = true;
+		
 		SelfDetachableSpriteWithBoby tile = new SelfDetachableSpriteWithBoby(x, y, textureRegionList.get(tileType.toInt()), 
 				vertexBufferObjectManager)
 		{
@@ -127,12 +131,12 @@ public class TileFactory
 				Camera camera = ResourcesManager.getInstance().getActivity().getCamera();
 
 				// remove self when out of the screen
-				int posX = ((int) this.getX() / Map.TILE_SIZE);
-				int posY = ((int) this.getY() / Map.TILE_SIZE);
+				int posX = (int) (this.getX() / Map.TILE_SIZE);
+				int posY = (int) (this.getY() / Map.TILE_SIZE);
 				int camHalfHeight = (int) ((camera.getHeight() / 2) / Map.TILE_SIZE);
 				int camHalfWidth = (int) ((camera.getWidth() / 2) / Map.TILE_SIZE);
-				int camX = ((int) camera.getCenterX() / Map.TILE_SIZE);
-				int camY = ((int) camera.getCenterY() / Map.TILE_SIZE);
+				int camX = (int) (camera.getCenterX() / Map.TILE_SIZE);
+				int camY = (int) (camera.getCenterY() / Map.TILE_SIZE);
 
 				if ((posX < (camX - camHalfWidth - 2))
 					|| (posX > (camX + camHalfWidth + 2))
@@ -141,6 +145,7 @@ public class TileFactory
 					)
 				{
 					this.safeDetachSelfAndChildren(ResourcesManager.getInstance().getActivity());
+					Map.mapData.getMap()[posX][posY].created = false;
 				}
 			}
 		};
