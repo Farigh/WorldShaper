@@ -19,15 +19,22 @@ import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.HorizontalAlign;
 
 import com.etherprod.worldshaper.ui.ClippedAnimatedSprite;
+import com.etherprod.worldshaper.ui.MouseOnScreenControl;
+import com.etherprod.worldshaper.ui.MouseOnScreenControl.IMouseOnScreenControlListener;
+import com.etherprod.worldshaper.ui.MyBaseOnScreenControl;
 
 import android.opengl.GLES20;
 
 public abstract class HUDScene extends MyScene
 {
-	private BitmapTextureAtlas			mOnScreenControlTexture;
 	private BuildableBitmapTextureAtlas	uiTextureAtlas;
-	private ITextureRegion				mOnScreenControlBaseTextureRegion;
-	private ITextureRegion				mOnScreenControlKnobTextureRegion;
+	private BitmapTextureAtlas			leftPadTexture;
+	private ITextureRegion				leftPadBaseRegion;
+	private ITextureRegion				leftPadPointerRegion;
+	private BitmapTextureAtlas			mouseTexture;
+	private ITextureRegion				mouseBaseRegion;
+	private ITextureRegion				mousePointerRegion;
+
 	protected HUD 						gameHUD;
 	
 	// life
@@ -54,78 +61,34 @@ public abstract class HUDScene extends MyScene
 	{
 		onCreateResources();
 		createHUD();
-
-		/* Velocity control (left). */
-		final float y = activity.getCAMERA_HEIGHT()
-				- this.mOnScreenControlBaseTextureRegion.getHeight();
-		final AnalogOnScreenControl velocityOnScreenControl = new AnalogOnScreenControl(
-				0, y, activity.getCamera(), this.mOnScreenControlBaseTextureRegion,
-				this.mOnScreenControlKnobTextureRegion, 0.1f,
-				activity.getVertexBufferObjectManager(),
-				new IAnalogOnScreenControlListener() {
-					@Override
-					public void onControlChange(
-							final BaseOnScreenControl pBaseOnScreenControl,
-							final float pValueX, final float pValueY)
-					{
-						onLeftControlChange(pBaseOnScreenControl, pValueX, pValueY);
-					}
-
-					@Override
-					public void onControlClick(
-							final AnalogOnScreenControl pAnalogOnScreenControl)
-					{
-						onLeftControlClick(pAnalogOnScreenControl);
-					}
-				});
-		velocityOnScreenControl.getControlBase().setBlendFunction(
-				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-		velocityOnScreenControl.getControlBase().setAlpha(0.5f);
-
-		gameHUD.setChildScene(velocityOnScreenControl);
-
-		/* Rotation control (right). *//*
-		final float x = activity.getCAMERA_WIDTH()
-				- this.mOnScreenControlBaseTextureRegion.getWidth();
-		final AnalogOnScreenControl rotationOnScreenControl = new AnalogOnScreenControl(
-				x, y, activity.getCamera(), this.mOnScreenControlBaseTextureRegion,
-				this.mOnScreenControlKnobTextureRegion, 0.1f,
-				activity.getVertexBufferObjectManager(),
-				new IAnalogOnScreenControlListener() {
-					@Override
-					public void onControlChange(
-							final BaseOnScreenControl pBaseOnScreenControl,
-							final float pValueX, final float pValueY)
-					{
-						onRightControlChange(pBaseOnScreenControl, pValueX, pValueY);
-					}
-
-					@Override
-					public void onControlClick(
-							final AnalogOnScreenControl pAnalogOnScreenControl)
-					{
-						onRightControlClick(pAnalogOnScreenControl);
-					}
-				});
-		rotationOnScreenControl.getControlBase().setBlendFunction(
-				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-		rotationOnScreenControl.getControlBase().setAlpha(0.5f);
-
-		velocityOnScreenControl.setChildScene(rotationOnScreenControl);*/
 	}
 
 	private void onCreateResources()
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/hud/");
-		this.mOnScreenControlTexture = new BitmapTextureAtlas(
+
+		// left pad
+		this.leftPadTexture = new BitmapTextureAtlas(
 				activity.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
-		this.mOnScreenControlBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mOnScreenControlTexture, activity,
+		this.leftPadBaseRegion = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(this.leftPadTexture, activity,
 						"onscreen_control_base.png", 0, 0);
-		this.mOnScreenControlKnobTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.mOnScreenControlTexture, activity,
+		this.leftPadPointerRegion = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(this.leftPadTexture, activity,
 						"onscreen_control_knob.png", 128, 0);
-		this.mOnScreenControlTexture.load();
+		this.leftPadTexture.load();
+
+		// mouse
+		this.mouseTexture = new BitmapTextureAtlas(
+				activity.getTextureManager(), 512, 256, TextureOptions.BILINEAR);
+		this.mouseBaseRegion = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(this.mouseTexture, activity,
+						"mouse_base.png", 0, 0);
+		this.mousePointerRegion = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(this.mouseTexture, activity,
+						"mouse_pointer.png", 256, 0);
+		this.mouseTexture.load();
+		
 
 		// jump button
 		uiTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
@@ -158,7 +121,15 @@ public abstract class HUDScene extends MyScene
 
 		// adding life text
 		createLife();
+		
+		// adding controls
+		createJump();
+		AnalogOnScreenControl leftPad = createVelocityPad();
+		createMouse(leftPad);
+	}
 
+	private void createJump()
+	{
 		// adding jump button
 		final float x = activity.getCAMERA_WIDTH() - jump_texture.getWidth() - 100;
 		final float y = activity.getCAMERA_HEIGHT() - jump_texture.getHeight() - 50;
@@ -193,7 +164,8 @@ public abstract class HUDScene extends MyScene
 		lifebar.animate(progressbar_animate, true);
 		lifebar.setScale(2f);
 
-		lifebar_bg = new Sprite(LIFEBAR_BG_POSITION_X, LIFEBAR_BG_POSITION_Y, lifebar_bg_region, activity.getVertexBufferObjectManager());
+		lifebar_bg = new Sprite(LIFEBAR_BG_POSITION_X, LIFEBAR_BG_POSITION_Y, lifebar_bg_region,
+				activity.getVertexBufferObjectManager());
 		gameHUD.attachChild(lifebar_bg);
 		gameHUD.attachChild(lifebar);
 
@@ -203,6 +175,70 @@ public abstract class HUDScene extends MyScene
 
 		// set life to max
 		setLife(50, 50);
+	}
+
+	private AnalogOnScreenControl createVelocityPad()
+	{
+		final float y = activity.getCAMERA_HEIGHT()
+				- this.leftPadBaseRegion.getHeight();
+
+		/* Velocity control (left). */
+		final AnalogOnScreenControl velocityPad = new AnalogOnScreenControl(10, y - 10,
+				activity.getCamera(), this.leftPadBaseRegion, this.leftPadPointerRegion, 0.1f,
+				activity.getVertexBufferObjectManager(),
+				new IAnalogOnScreenControlListener()
+				{
+					@Override
+					public void onControlChange(final BaseOnScreenControl control,
+							final float pValueX, final float pValueY)
+					{
+						onLeftControlChange(control, pValueX, pValueY);
+					}
+
+					@Override
+					public void onControlClick(final AnalogOnScreenControl control)
+					{
+						onLeftControlClick(control);
+					}
+				});
+		velocityPad.getControlBase().setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+		velocityPad.getControlBase().setAlpha(0.5f);
+
+		gameHUD.setChildScene(velocityPad);
+		
+		return velocityPad;
+	}
+
+	private void createMouse(AnalogOnScreenControl leftPad)
+	{
+		final float x = (activity.getCAMERA_WIDTH() - this.mouseBaseRegion.getWidth()) / 2;
+		final float y = (activity.getCAMERA_HEIGHT() - this.mouseBaseRegion.getHeight()) / 2;
+
+		/* Mouse control */
+		final MouseOnScreenControl mouseOnScreenControl = new MouseOnScreenControl(x, y, 100,
+				100, activity.getCamera(), this.mouseBaseRegion,
+				this.mousePointerRegion, 0.1f, activity.getVertexBufferObjectManager(),
+				new IMouseOnScreenControlListener()
+				{
+					@Override
+					public void onControlChange(final MyBaseOnScreenControl pBaseOnScreenControl,
+							final float pValueX, final float pValueY)
+					{
+						onMouseControlChange(pBaseOnScreenControl, pValueX, pValueY);
+					}
+	
+					@Override
+					public void onControlClick(final MouseOnScreenControl pAnalogOnScreenControl)
+					{
+						// Nothing to do here
+					}
+				});
+
+		mouseOnScreenControl.getControlKnob().setBlendFunction(
+				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+		mouseOnScreenControl.getControlKnob().setAlpha(0.5f);
+
+		leftPad.setChildScene(mouseOnScreenControl);
 	}
 
 	@Override
@@ -233,10 +269,8 @@ public abstract class HUDScene extends MyScene
 
 	protected abstract void onLeftControlClick(final AnalogOnScreenControl pAnalogOnScreenControl);
 
-	protected abstract void onRightControlChange(BaseOnScreenControl pBaseOnScreenControl,
+	protected abstract void onMouseControlChange(MyBaseOnScreenControl pBaseOnScreenControl,
 			float pValueX, float pValueY);
-
-	protected abstract void onRightControlClick(final AnalogOnScreenControl pAnalogOnScreenControl);
 
 	protected abstract void onJumpButtonClick();
 }

@@ -17,6 +17,7 @@ import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
+import com.etherprod.worldshaper.ui.MyBaseOnScreenControl;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.loader.AsyncTaskRunner;
@@ -102,8 +103,7 @@ public class GameScene extends HUDScene
 	}
 
 	@Override
-	protected void onRightControlChange(
-			BaseOnScreenControl pBaseOnScreenControl, float pValueX, 
+	protected void onMouseControlChange(MyBaseOnScreenControl pBaseOnScreenControl, float pValueX, 
 			float pValueY) 
 	{
 		Player player = GameScene.this.player;
@@ -126,13 +126,6 @@ public class GameScene extends HUDScene
 	protected void onJumpButtonClick()
 	{
 		player.jump();
-	}
-
-	@Override
-	protected void onRightControlClick(
-			AnalogOnScreenControl pAnalogOnScreenControl)
-	{
-		/* Nothing. */
 	}
 
 	public Player getPlayer()
