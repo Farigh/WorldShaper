@@ -25,16 +25,14 @@ import com.etherprod.worldshaper.SceneManager;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.MapData;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
-import com.etherprod.worldshaper.util.map.MapEntity;
 
 public class MapXMLManager extends DefaultHandler
 {
-	//private String	tmpVal;
+	private String			tmpVal;
 	private MapData			mapData;
-	private MapEntity		tmpEntity;
 	private static int		tile_number = 0;
 	private static int		current_parsed = 0;
-	
+
 	public MapData load(MainActivity activity, String filename)
 	{
 		mapData = new MapData();
@@ -75,6 +73,21 @@ public class MapXMLManager extends DefaultHandler
 		return data;
 	}
 
+	/**
+	 * Saves the map to the following format :
+	 *   <?xml version=\"1.0\" encoding=\"utf-8\"?>
+	 *   <level tiles="${tile-number}" width="${width}" height="${height}">
+	 *   	<spawn x="${spawn_x}" y="${spawn_y}" />
+	 *		<entities>
+	 *			tile_type1;x1;y1@[...]@tile_typeN;xN;yN
+	 * 		</entities>
+	 *   </level>
+	 * The file is a compressed base64 encoded one
+	 *
+	 * @param activity The game activity
+	 * @param filename The filename to save the map to
+	 * @param data     The map data to be saved
+	 */
 	public static void saveMapToFile(MainActivity activity, String filename, MapData data)
 	{
 		tile_number = data.getTileNumber();
@@ -83,10 +96,10 @@ public class MapXMLManager extends DefaultHandler
 		try
 		{
 			OutputStream file = activity.openFileOutput(filename, Context.MODE_PRIVATE);
-			OutputStream base64 = new Base64OutputStream(file, Base64.DEFAULT);
+			OutputStream buffer = new BufferedOutputStream(file);
+			OutputStream base64 = new Base64OutputStream(buffer, Base64.DEFAULT);
 			OutputStream compress = new GZIPOutputStream(base64);
-			OutputStream buffer = new BufferedOutputStream(compress);
-			OutputStreamWriter stream = new OutputStreamWriter(buffer);
+			OutputStreamWriter stream = new OutputStreamWriter(compress);
 
 			try
 			{
@@ -98,7 +111,8 @@ public class MapXMLManager extends DefaultHandler
 				stream.write("<level tiles=\"" + data.getTileNumber() + "\" width=\"" + width 
 						+ "\" height=\"" + height + "\">\n");
 				stream.write("<spawn x=\"" + data.getMapSpawn().x
-						+ "\" y=\"" + data.getMapSpawn().y + "\" />\n");
+						+ "\" y=\"" + data.getMapSpawn().y + "\" />\n"
+						+ "<entities>");
 
 				for (int i = 0; i < width; i++)
 				{
@@ -115,13 +129,12 @@ public class MapXMLManager extends DefaultHandler
 								SceneManager.getInstance().setProgress(30 + now, "Saving world map "
 										+ percent + "%");
 
-							stream.write("<entity x=\"" + (i + 1) + "\" y=\"" + (j + 1) 
-									+ "\" type=\"" + map[i][j].getTileType() + "\" />\n");
+							stream.write(map[i][j].getTileType() + ";" + (i + 1) + ";" + (j + 1) + "@");
 						}
 					}
 				}
 
-				stream.write("</level>");
+				stream.write("</entities>\n</level>");
 
 				stream.flush();
 			}
@@ -140,24 +153,8 @@ public class MapXMLManager extends DefaultHandler
 	public void startElement(String uri, String localName, String qName,
 		Attributes attributes) throws SAXException 
 	{
-		//reset
-		//tmpVal = "";
-		if (qName.equalsIgnoreCase("entity"))
-		{
-			//create a new instance of employee
-			tmpEntity = new MapEntity(Integer.parseInt(attributes.getValue("x")),
-					Integer.parseInt(attributes.getValue("y")),
-					attributes.getValue("type"));
-
-			int previous = (int)(((float)current_parsed / (float)tile_number) * 75f);
-			int now = (int)(((float)(current_parsed + 1) / (float)tile_number) * 75f);
-			int percent = (int)(((float)(current_parsed + 1) / (float)tile_number) * 100f);
-
-			if (previous != now)
-				SceneManager.getInstance().setProgress(5 + now, "Loading world map " + percent + "%");
-
-			current_parsed++;
-		}
+		if (qName.equalsIgnoreCase("entities"))
+			tmpVal = "";
 
 		if (qName.equalsIgnoreCase("level"))
 		{
@@ -176,17 +173,52 @@ public class MapXMLManager extends DefaultHandler
 
 	public void characters(char[] ch, int start, int length) throws SAXException
 	{
-		//tmpVal = new String(ch, start, length);
+		tmpVal += new String(ch, start, length);
+		
+		boolean ends_with_at = tmpVal.endsWith("@");
+		
+		String entities[] = tmpVal.split("@");
+		for (int i = 0; i < (entities.length - 1); i++)
+		{
+			int previous = (int)(((float)current_parsed / (float)tile_number) * 75f);
+			int now = (int)(((float)(current_parsed + 1) / (float)tile_number) * 75f);
+			int percent = (int)(((float)(current_parsed + 1) / (float)tile_number) * 100f);
+
+			if (previous != now)
+				SceneManager.getInstance().setProgress(5 + now, "Loading world map " + percent + "%");
+
+			parseEntityInfo(entities[i]);
+
+			current_parsed++;
+		}
+
+		tmpVal = entities[entities.length - 1];
+
+		// put back @ so it wont merge 2 entities
+		if (ends_with_at)
+			tmpVal += "@";
 	}
 
 	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if(qName.equalsIgnoreCase("entity"))
+		if(qName.equalsIgnoreCase("entities") && (tmpVal != ""))
 		{
-			EntityData entity = mapData.addEntity(EntityType.TILE,
-					tmpEntity.getX() - 1, tmpEntity.getY() - 1);
-			entity.setTileType(tmpEntity.getType());
-			tmpEntity = null;
+			// don't forget the last entity 
+			parseEntityInfo(tmpVal);
 		}
+	}
+	
+	/**
+	 * Handles entity lines of the file (tile_type;x;y)
+	 *
+	 * @param buf The fist line
+	 */
+	private void parseEntityInfo(String buf)
+	{
+		String fields[] = buf.split(";");
+
+		EntityData entity = mapData.addEntity(EntityType.TILE, Integer.parseInt(fields[1]) - 1,
+				Integer.parseInt(fields[2]) - 1);
+		entity.setTileType(fields[0]);
 	}
 }

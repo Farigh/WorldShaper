@@ -12,9 +12,9 @@ import com.etherprod.worldshaper.objects.factories.PlayerFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
 import com.etherprod.worldshaper.util.data.EntityData;
-import com.etherprod.worldshaper.util.data.MapXMLManager;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.data.MapData;
+import com.etherprod.worldshaper.util.data.MapXMLManager;
 import com.etherprod.worldshaper.util.map.MapGenerator;
 
 /**
@@ -38,16 +38,16 @@ public class Map
 			PhysicsWorld physicsWorld)
 	{
 		// load map if exists
-		if (activity.getFileStreamPath("mp.dat").exists())
+		if (activity.getFileStreamPath("home.wsm").exists())
 		{
 			SceneManager.getInstance().setProgress(5, "Loading world map");
-			mapData = MapXMLManager.loadMapFromFile(activity, "map.dat");
+			mapData = MapXMLManager.loadMapFromFile(activity, "home.wsm");
 		}
 		else
 		{
 			SceneManager.getInstance().setProgress(5, "Creating world map");
 			mapData = MapGenerator.generateHome();
-			//MapXMLManager.saveMapToFile(activity, "map.dat", mapData);
+			MapXMLManager.saveMapToFile(activity, "home.wsm", mapData);
 		}
 
 		SceneManager.getInstance().setProgress(80, "Rendering world");
