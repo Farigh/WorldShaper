@@ -20,8 +20,6 @@ import org.andengine.util.HorizontalAlign;
 
 import com.etherprod.worldshaper.ui.ClippedAnimatedSprite;
 import com.etherprod.worldshaper.ui.MouseOnScreenControl;
-import com.etherprod.worldshaper.ui.MouseOnScreenControl.IMouseOnScreenControlListener;
-import com.etherprod.worldshaper.ui.MyBaseOnScreenControl;
 
 import android.opengl.GLES20;
 
@@ -35,8 +33,10 @@ public abstract class HUDScene extends MyScene
 	private ITextureRegion				mouseBaseRegion;
 	private ITextureRegion				mousePointerRegion;
 
+	private ITextureRegion				jump_texture;
+
 	protected HUD 						gameHUD;
-	
+
 	// life
 	private Text							lifeText;
 	private static TiledTextureRegion		lifebar_region;
@@ -45,12 +45,10 @@ public abstract class HUDScene extends MyScene
 	private static Sprite					lifebar_bg;
 	private final static float				LIFEBAR_WIDTH = 96f;
 
-	private ITextureRegion				jump_texture;
-	
 	// constants
 	private final static int LIFEBAR_BG_POSITION_X = 584;
 	private final static int LIFEBAR_BG_POSITION_Y = 14;
-	
+
 	@Override
 	public void createScene()
 	{
@@ -88,7 +86,6 @@ public abstract class HUDScene extends MyScene
 				.createFromAsset(this.mouseTexture, activity,
 						"mouse_pointer.png", 256, 0);
 		this.mouseTexture.load();
-		
 
 		// jump button
 		uiTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,
@@ -114,14 +111,14 @@ public abstract class HUDScene extends MyScene
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void createHUD()
 	{
 		gameHUD = new HUD();
 
 		// adding life text
 		createLife();
-		
+
 		// adding controls
 		createJump();
 		AnalogOnScreenControl leftPad = createVelocityPad();
@@ -205,7 +202,7 @@ public abstract class HUDScene extends MyScene
 		velocityPad.getControlBase().setAlpha(0.5f);
 
 		gameHUD.setChildScene(velocityPad);
-		
+
 		return velocityPad;
 	}
 
@@ -215,24 +212,9 @@ public abstract class HUDScene extends MyScene
 		final float y = (activity.getCAMERA_HEIGHT() - this.mouseBaseRegion.getHeight()) / 2;
 
 		/* Mouse control */
-		final MouseOnScreenControl mouseOnScreenControl = new MouseOnScreenControl(x, y, 100,
-				100, activity.getCamera(), this.mouseBaseRegion,
-				this.mousePointerRegion, 0.1f, activity.getVertexBufferObjectManager(),
-				new IMouseOnScreenControlListener()
-				{
-					@Override
-					public void onControlChange(final MyBaseOnScreenControl pBaseOnScreenControl,
-							final float pValueX, final float pValueY)
-					{
-						onMouseControlChange(pBaseOnScreenControl, pValueX, pValueY);
-					}
-	
-					@Override
-					public void onControlClick(final MouseOnScreenControl pAnalogOnScreenControl)
-					{
-						// Nothing to do here
-					}
-				});
+		final MouseOnScreenControl mouseOnScreenControl = new MouseOnScreenControl(x, y, 80,
+				80, activity.getCamera(), this.mouseBaseRegion,
+				this.mousePointerRegion, 0.1f, activity.getVertexBufferObjectManager());
 
 		mouseOnScreenControl.getControlKnob().setBlendFunction(
 				GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -268,9 +250,6 @@ public abstract class HUDScene extends MyScene
 			float pValueX, float pValueY);
 
 	protected abstract void onLeftControlClick(final AnalogOnScreenControl pAnalogOnScreenControl);
-
-	protected abstract void onMouseControlChange(MyBaseOnScreenControl pBaseOnScreenControl,
-			float pValueX, float pValueY);
 
 	protected abstract void onJumpButtonClick();
 }

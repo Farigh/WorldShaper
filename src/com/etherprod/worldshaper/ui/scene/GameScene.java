@@ -6,7 +6,6 @@ import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.util.GLState;
-import org.andengine.util.math.MathUtils;
 
 import android.hardware.SensorManager;
 
@@ -17,7 +16,6 @@ import com.etherprod.worldshaper.SceneManager.SceneType;
 import com.etherprod.worldshaper.objects.Map;
 import com.etherprod.worldshaper.objects.Player;
 import com.etherprod.worldshaper.objects.factories.TileFactory.TileType;
-import com.etherprod.worldshaper.ui.MyBaseOnScreenControl;
 import com.etherprod.worldshaper.util.data.EntityData;
 import com.etherprod.worldshaper.util.data.EntityData.EntityType;
 import com.etherprod.worldshaper.util.loader.AsyncTaskRunner;
@@ -96,30 +94,9 @@ public class GameScene extends HUDScene
 	}
 
 	@Override
-	protected void onLeftControlClick(
-			AnalogOnScreenControl pAnalogOnScreenControl)
+	protected void onLeftControlClick(AnalogOnScreenControl pAnalogOnScreenControl)
 	{
-		/* Nothing. */
-	}
-
-	@Override
-	protected void onMouseControlChange(MyBaseOnScreenControl pBaseOnScreenControl, float pValueX, 
-			float pValueY) 
-	{
-		Player player = GameScene.this.player;
-
-		if (player == null)
-			return;
-
-		if (pValueX == 0 && pValueY == 0)
-		{
-			player.setRotation(0);
-		}
-		else
-		{
-			player.setRotation(MathUtils.radToDeg((float) 
-					Math.atan2(pValueX, -pValueY)));
-		}
+		// Nothing to do here
 	}
 
 	@Override
@@ -193,7 +170,7 @@ public class GameScene extends HUDScene
 							TileType.valueOf(data.getTileType()));
 				}
 			}
-			
+
 			lastX = newX;
 		}
 
@@ -218,7 +195,7 @@ public class GameScene extends HUDScene
 							TileType.valueOf(data.getTileType()));
 				}
 			}
-			
+
 			lastY = newY;
 		}
 
