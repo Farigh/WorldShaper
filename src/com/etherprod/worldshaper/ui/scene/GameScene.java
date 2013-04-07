@@ -161,19 +161,26 @@ public class GameScene extends HUDScene
 			else
 				populateX = newX - ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2) - 1;
 
-			int halfHeight = ((activity.getCAMERA_HEIGHT() / Map.TILE_SIZE) / 2);
-			int newMaxY = newY + halfHeight + 3;
-			for (int j = newY - halfHeight - 2; j < newMaxY; j++)
+			// skipping if out of the map
+			if ((populateX >= 0) && (populateX < Map.mapData.getMapSize().y))
 			{
-				EntityData data = map[populateX][j];
-				if ((data != null) && (data.getType() == EntityType.TILE) && !data.created)
+				int halfHeight = ((activity.getCAMERA_HEIGHT() / Map.TILE_SIZE) / 2);
+				int newMaxY = newY + halfHeight + 3;
+				for (int j = newY - halfHeight - 2; j < newMaxY; j++)
 				{
-					Map.addTile(this, activity.getVertexBufferObjectManager(),
-							physicsWorld, populateX * Map.TILE_SIZE, j * Map.TILE_SIZE,
-							TileType.valueOf(data.getTileType()));
+					// skipping if out of the map
+					if ((j < 0) || (j > Map.mapData.getMapSize().x))
+						break;
+
+					EntityData data = map[populateX][j];
+					if ((data != null) && (data.getType() == EntityType.TILE) && !data.created)
+					{
+						Map.addTile(this, activity.getVertexBufferObjectManager(),
+								physicsWorld, populateX * Map.TILE_SIZE, j * Map.TILE_SIZE,
+								TileType.valueOf(data.getTileType()));
+					}
 				}
 			}
-
 			lastX = newX;
 		}
 
@@ -186,16 +193,24 @@ public class GameScene extends HUDScene
 			else
 				populateY = newY - ((activity.getCAMERA_HEIGHT() / Map.TILE_SIZE) / 2) - 1;	
 
-			int halfWidth = ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2);
-			int newMaxX = newX + halfWidth + 3;
-			for (int i = newX - halfWidth - 2; i < newMaxX; i++)
+			// skipping if out of the map
+			if ((populateY >= 0) && (populateY < Map.mapData.getMapSize().x))
 			{
-				EntityData data = map[i][populateY];
-				if ((data != null) && (data.getType() == EntityType.TILE) && !data.created)
+				int halfWidth = ((activity.getCAMERA_WIDTH() / Map.TILE_SIZE) / 2);
+				int newMaxX = newX + halfWidth + 3;
+				for (int i = newX - halfWidth - 2; i < newMaxX; i++)
 				{
-					Map.addTile(this, activity.getVertexBufferObjectManager(),
-							physicsWorld, i * Map.TILE_SIZE, populateY * Map.TILE_SIZE,
-							TileType.valueOf(data.getTileType()));
+					// skipping if out of the map
+					if ((i < 0) || (i > Map.mapData.getMapSize().y))
+						break;
+
+					EntityData data = map[i][populateY];
+					if ((data != null) && (data.getType() == EntityType.TILE) && !data.created)
+					{
+						Map.addTile(this, activity.getVertexBufferObjectManager(),
+								physicsWorld, i * Map.TILE_SIZE, populateY * Map.TILE_SIZE,
+								TileType.valueOf(data.getTileType()));
+					}
 				}
 			}
 
