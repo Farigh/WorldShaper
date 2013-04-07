@@ -18,6 +18,8 @@ import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.util.debug.Debug;
 
+import android.content.SharedPreferences;
+
 import com.etherprod.worldshaper.MainActivity;
 import com.etherprod.worldshaper.ResourcesManager;
 import com.etherprod.worldshaper.SceneManager;
@@ -31,6 +33,10 @@ public class SettingsScene extends MyScene implements IOnMenuItemClickListener
 	private final int			SETTINGS_MUTE_MUSIC		= 1;
 	private TiledSpriteMenuItem	soundsMenuItem;
 	private TiledSpriteMenuItem	musicMenuItem;
+
+	private static final String	PREFS_NAME			= "Settings";
+	private static final String PREFS_SOUNDS_NAME	= "sounds";
+	private static final String PREFS_MUSIC_NAME	= "music";
 
 	private static ITextureRegion settings_background_region;
 	private static TiledTextureRegion checkbox_region;
@@ -78,6 +84,9 @@ public class SettingsScene extends MyScene implements IOnMenuItemClickListener
 	{
 		// go back to main menu
 		SceneManager.getInstance().setScene(SceneType.SCENE_MENU);
+
+		// save settings
+		this.disposeScene();
 	}
 
 	@Override
@@ -89,7 +98,14 @@ public class SettingsScene extends MyScene implements IOnMenuItemClickListener
 	@Override
 	public void disposeScene()
 	{
+		// Save settings
+		SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PREFS_MUSIC_NAME, activity.isMusicActive());
+		editor.putBoolean(PREFS_SOUNDS_NAME, activity.isSoundsActive());
 
+		// Commit modifications
+		editor.commit();
 	}
 
 	@Override
@@ -151,7 +167,7 @@ public class SettingsScene extends MyScene implements IOnMenuItemClickListener
 		settingsChildScene.addMenuItem(musicMenuItem);
 		settingsChildScene.addMenuItem(soundsMenuItem);
 
-		// initialize checkbox
+		// initialize check-box
 		musicMenuItem.setCurrentTileIndex(activity.isMusicActive() ? 1 : 0);
 		soundsMenuItem.setCurrentTileIndex(activity.isSoundsActive() ? 1 : 0);
 
@@ -164,5 +180,16 @@ public class SettingsScene extends MyScene implements IOnMenuItemClickListener
 		settingsChildScene.setOnMenuItemClickListener(this);
 
 		setChildScene(settingsChildScene);
+	}
+
+	public static void restoreSettings(MainActivity activity)
+	{
+		SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+
+		if (!settings.getBoolean(PREFS_MUSIC_NAME, true))
+			activity.computeMusic();
+
+		if (!settings.getBoolean(PREFS_SOUNDS_NAME, true))
+			activity.computeSounds();
 	}
 }
