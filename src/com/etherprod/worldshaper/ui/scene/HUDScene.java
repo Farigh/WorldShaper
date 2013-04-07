@@ -1,9 +1,6 @@
 package com.etherprod.worldshaper.ui.scene;
 
 import org.andengine.engine.camera.hud.HUD;
-import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl;
-import org.andengine.engine.camera.hud.controls.BaseOnScreenControl;
-import org.andengine.engine.camera.hud.controls.AnalogOnScreenControl.IAnalogOnScreenControlListener;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
@@ -20,6 +17,9 @@ import org.andengine.util.HorizontalAlign;
 
 import com.etherprod.worldshaper.ui.ClippedAnimatedSprite;
 import com.etherprod.worldshaper.ui.MouseOnScreenControl;
+import com.etherprod.worldshaper.ui.MyAnalogOnScreenControl;
+import com.etherprod.worldshaper.ui.MyAnalogOnScreenControl.IMyAnalogOnScreenControlListener;
+import com.etherprod.worldshaper.ui.MyBaseOnScreenControl;
 
 import android.opengl.GLES20;
 
@@ -73,7 +73,7 @@ public abstract class HUDScene extends MyScene
 						"onscreen_control_base.png", 0, 0);
 		this.leftPadPointerRegion = BitmapTextureAtlasTextureRegionFactory
 				.createFromAsset(this.leftPadTexture, activity,
-						"onscreen_control_knob.png", 128, 0);
+						"onscreen_control_knob.png", 0, 60);
 		this.leftPadTexture.load();
 
 		// mouse
@@ -121,7 +121,7 @@ public abstract class HUDScene extends MyScene
 
 		// adding controls
 		createJump();
-		AnalogOnScreenControl leftPad = createVelocityPad();
+		MyAnalogOnScreenControl leftPad = createVelocityPad();
 		createMouse(leftPad);
 	}
 
@@ -174,26 +174,26 @@ public abstract class HUDScene extends MyScene
 		setLife(50, 50);
 	}
 
-	private AnalogOnScreenControl createVelocityPad()
+	private MyAnalogOnScreenControl createVelocityPad()
 	{
 		final float y = activity.getCAMERA_HEIGHT()
 				- this.leftPadBaseRegion.getHeight();
 
 		/* Velocity control (left). */
-		final AnalogOnScreenControl velocityPad = new AnalogOnScreenControl(10, y - 10,
+		final MyAnalogOnScreenControl velocityPad = new MyAnalogOnScreenControl(10f, y - 40, 0f, 60f,
 				activity.getCamera(), this.leftPadBaseRegion, this.leftPadPointerRegion, 0.1f,
 				activity.getVertexBufferObjectManager(),
-				new IAnalogOnScreenControlListener()
+				new IMyAnalogOnScreenControlListener()
 				{
 					@Override
-					public void onControlChange(final BaseOnScreenControl control,
+					public void onControlChange(final MyBaseOnScreenControl control,
 							final float pValueX, final float pValueY)
 					{
 						onLeftControlChange(control, pValueX, pValueY);
 					}
 
 					@Override
-					public void onControlClick(final AnalogOnScreenControl control)
+					public void onControlClick(final MyAnalogOnScreenControl control)
 					{
 						onLeftControlClick(control);
 					}
@@ -206,7 +206,7 @@ public abstract class HUDScene extends MyScene
 		return velocityPad;
 	}
 
-	private void createMouse(AnalogOnScreenControl leftPad)
+	private void createMouse(MyAnalogOnScreenControl leftPad)
 	{
 		final float x = (activity.getCAMERA_WIDTH() - this.mouseBaseRegion.getWidth()) / 2;
 		final float y = (activity.getCAMERA_HEIGHT() - this.mouseBaseRegion.getHeight()) / 2;
@@ -246,10 +246,10 @@ public abstract class HUDScene extends MyScene
 	//         Abstract functions
 	//=====================================
 
-	protected abstract void onLeftControlChange(BaseOnScreenControl pBaseOnScreenControl,
+	protected abstract void onLeftControlChange(MyBaseOnScreenControl pBaseOnScreenControl,
 			float pValueX, float pValueY);
 
-	protected abstract void onLeftControlClick(final AnalogOnScreenControl pAnalogOnScreenControl);
+	protected abstract void onLeftControlClick(final MyAnalogOnScreenControl pAnalogOnScreenControl);
 
 	protected abstract void onJumpButtonClick();
 }
