@@ -38,8 +38,9 @@ public class MapXMLManager extends DefaultHandler
 		mapData = new MapData();
 		tile_number = 0;
 		current_parsed = 0;
+		tmpVal = "";
 
-		//get a factory
+		// get the SAXParser factory
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 
 		try
@@ -51,16 +52,26 @@ public class MapXMLManager extends DefaultHandler
 			InputStream compress = new GZIPInputStream(base64);
 			InputStream stream = new BufferedInputStream(compress);
 
-			parser.parse(stream, this);
-			
-			stream.close();
+			try
+			{
+				parser.parse(stream, this);
+			}
+			finally
+			{
+				stream.close();
+			}
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		return mapData;
+		// cleaning memory
+		MapData result = mapData;
+		mapData = null;
+		tmpVal = null;
+
+		return result;
 	}
 
 	public static MapData loadMapFromFile(MainActivity activity, String filename)
@@ -174,9 +185,9 @@ public class MapXMLManager extends DefaultHandler
 	public void characters(char[] ch, int start, int length) throws SAXException
 	{
 		tmpVal += new String(ch, start, length);
-		
+
 		boolean ends_with_at = tmpVal.endsWith("@");
-		
+
 		String entities[] = tmpVal.split("@");
 		for (int i = 0; i < (entities.length - 1); i++)
 		{

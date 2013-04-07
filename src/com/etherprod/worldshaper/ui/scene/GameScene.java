@@ -64,6 +64,9 @@ public class GameScene extends HUDScene
 	{
 		super.disposeScene();
 
+		// free map data
+		Map.mapData = null;
+
 		// don't follow player anymore
 		activity.getCamera().setChaseEntity(null);
 
@@ -114,7 +117,7 @@ public class GameScene extends HUDScene
 	public void loadResouces()
 	{
 		super.loadResouces();
-		
+
 		IAsyncTask callback = new IAsyncTask(this)
 		{
 			@Override
