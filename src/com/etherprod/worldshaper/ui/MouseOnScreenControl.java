@@ -13,37 +13,6 @@ public class MouseOnScreenControl extends MyBaseOnScreenControl implements IClic
 {
 	private final ClickDetector mClickDetector = new ClickDetector(this);
 
-	public MouseOnScreenControl(final float pX, final float pY, final Camera pCamera,
-			final ITextureRegion pControlBaseTextureRegion, final ITextureRegion pControlKnobTextureRegion,
-			final float pTimeBetweenUpdates, final VertexBufferObjectManager pVertexBufferObjectManager)
-	{
-		super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates,
-				pVertexBufferObjectManager, new MouseOnScreenControlListener());
-
-		this.getOnScreenControlListener().setPointer(getControlKnob());
-
-		// initialize centered
-		this.onUpdateControlKnob(0, 0);
-
-		this.mClickDetector.setEnabled(false);
-	}
-
-	public MouseOnScreenControl(final float pX, final float pY, final Camera pCamera,
-			final ITextureRegion pControlBaseTextureRegion, final ITextureRegion pControlKnobTextureRegion,
-			final float pTimeBetweenUpdates, final long pOnControlClickMaximumMilliseconds,
-			final VertexBufferObjectManager pVertexBufferObjectManager)
-	{
-		super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates,
-				pVertexBufferObjectManager, new MouseOnScreenControlListener());
-
-		this.getOnScreenControlListener().setPointer(getControlKnob());
-
-		// initialize centered
-		this.onUpdateControlKnob(0, 0);
-
-		this.mClickDetector.setTriggerClickMaximumMilliseconds(pOnControlClickMaximumMilliseconds);
-	}
-	
 	public MouseOnScreenControl(final float pX, final float pY, final float borderX, final float borderY,
 			final Camera pCamera, final ITextureRegion pControlBaseTextureRegion,
 			final ITextureRegion pControlKnobTextureRegion, final float pTimeBetweenUpdates,
@@ -54,8 +23,7 @@ public class MouseOnScreenControl extends MyBaseOnScreenControl implements IClic
 
 		this.getOnScreenControlListener().setPointer(getControlKnob());
 
-		// initialize centered
-		this.onUpdateControlKnob(0, 0);
+		this.init();
 
 		this.mClickDetector.setEnabled(false);
 	}
@@ -70,10 +38,26 @@ public class MouseOnScreenControl extends MyBaseOnScreenControl implements IClic
 
 		this.getOnScreenControlListener().setPointer(getControlKnob());
 
-		// initialize centered
-		this.onUpdateControlKnob(0, 0);
+		this.init();
 
 		this.mClickDetector.setTriggerClickMaximumMilliseconds(pOnControlClickMaximumMilliseconds);
+	}
+
+	public MouseOnScreenControl(final float pX, final float pY, final Camera pCamera,
+			final ITextureRegion pControlBaseTextureRegion, final ITextureRegion pControlKnobTextureRegion,
+			final float pTimeBetweenUpdates, final VertexBufferObjectManager pVertexBufferObjectManager)
+	{
+		this(pX, pY, 0f, 0f, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates,
+				pVertexBufferObjectManager);
+	}
+
+	public MouseOnScreenControl(final float pX, final float pY, final Camera pCamera,
+			final ITextureRegion pControlBaseTextureRegion, final ITextureRegion pControlKnobTextureRegion,
+			final float pTimeBetweenUpdates, final long pOnControlClickMaximumMilliseconds,
+			final VertexBufferObjectManager pVertexBufferObjectManager)
+	{
+		this(pX, pY, 0f, 0f, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates,
+				pOnControlClickMaximumMilliseconds, pVertexBufferObjectManager);
 	}
 
 	@Override
@@ -147,5 +131,11 @@ public class MouseOnScreenControl extends MyBaseOnScreenControl implements IClic
 	protected void onHandleControlKnobReleased()
 	{
 		// Do not reset position on release
+	}
+
+	private void init()
+	{
+		// initialize to the right
+		this.onUpdateControlKnob(1, 0);
 	}
 }
